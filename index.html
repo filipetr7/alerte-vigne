@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Alerte Vigne</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+font-family:Arial;
+background:#f3f6f4;
+margin:0;
+text-align:center;
+}
+
+header{
+background:#2f6f44;
+color:white;
+padding:20px;
+font-size:24px;
+}
+
+.box{
+background:white;
+margin:15px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+button{
+background:#2f6f44;
+color:white;
+border:none;
+padding:12px;
+border-radius:8px;
+margin-top:10px;
+font-size:16px;
+}
+
+input{
+padding:10px;
+width:90%;
+margin-top:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+🍇 Alerte Vigne
+</header>
+
+<div class="box">
+<h3>Parcelle</h3>
+<input placeholder="Nom de la parcelle">
+</div>
+
+<div class="box">
+<h3>Météo</h3>
+<p>Température : 21°C</p>
+<p>Humidité : 70%</p>
+<p>Risque mildiou : moyen</p>
+</div>
+
+<div class="box">
+<h3>Décision traitement</h3>
+<p>Traitement conseillé : demain matin</p>
+<button>Voir détails</button>
+</div>
+
+<div class="box">
+<h3>Analyse photo</h3>
+<input type="file">
+<button>Analyser</button>
+</div>
+
+</body>
+</html>
