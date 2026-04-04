@@ -1,81 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alerte Vigne</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
-body{
-font-family:Arial;
-background:#f3f6f4;
-margin:0;
-text-align:center;
-}
-
-header{
-background:#2f6f44;
-color:white;
-padding:20px;
-font-size:24px;
-}
-
-.box{
-background:white;
-margin:15px;
-padding:20px;
-border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
-
-button{
-background:#2f6f44;
-color:white;
-border:none;
-padding:12px;
-border-radius:8px;
-margin-top:10px;
-font-size:16px;
-}
-
-input{
-padding:10px;
-width:90%;
-margin-top:10px;
-}
+body{font-family:Arial,sans-serif;background:#f3f6f4;margin:0;text-align:center}
+header{background:#2f6f44;color:#fff;padding:20px;font-size:24px}
+.box{background:#fff;margin:20px;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
+button{background:#2f6f44;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-size:16px}
+input{padding:10px;width:80%;margin:10px;font-size:16px}
 </style>
-
 </head>
-
 <body>
-
-<header>
-🍇 Alerte Vigne
-</header>
+<header>🍇 Alerte Vigne</header>
 
 <div class="box">
-<h3>Parcelle</h3>
-<input placeholder="Nom de la parcelle">
+<h2>Localisation</h2>
+<input id="ville" placeholder="Nom de la ville ou village">
+<br>
+<button onclick="detectLocation()">Utiliser GPS</button>
+<button onclick="chargerMeteo()">Voir météo</button>
+<p id="lieu"></p>
 </div>
 
 <div class="box">
-<h3>Météo</h3>
-<p>Température : 21°C</p>
-<p>Humidité : 70%</p>
-<p>Risque mildiou : moyen</p>
+<h2>Météo</h2>
+<p id="meteo">---</p>
 </div>
 
 <div class="box">
-<h3>Décision traitement</h3>
-<p>Traitement conseillé : demain matin</p>
-<button>Voir détails</button>
+<h2>Décision traitement</h2>
+<p id="decision">---</p>
 </div>
 
-<div class="box">
-<h3>Analyse photo</h3>
-<input type="file">
-<button>Analyser</button>
-</div>
-
+<script>
+async function chargerMeteo(){
+let ville=document.getElementById("ville").value;
+if(!ville){alert("Entrez une ville");return;}
+let geo=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(ville));
+let g=await geo.json();
+if(!g.results){alert("Ville non trouvée");return;}
+let lat=g.results[0].latitude;
+let lon=g.results[0].longitude;
+let meteo=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m`);
+let data=await meteo.json();
+let temp=data.current.temperature_2m;
+document.getElementById("meteo").innerHTML="Température : "+temp+"°C";
+document.getElementById("decision").innerHTML=temp>20?"Traitement conseillé : demain matin":"Traitement possible : après demain";
+}
+function detectLocation(){
+navigator.geolocation.getCurrentPosition(function(pos){
+document.getElementById("lieu").innerHTML="Latitude "+pos.coords.latitude+" / Longitude "+pos.coords.longitude;
+});
+}
+</script>
 </body>
 </html>
