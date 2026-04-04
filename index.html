@@ -1,1056 +1,291 @@
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alerte Vigne</title>
-
-  <meta name="theme-color" content="#2f6f44">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-  <style>
-    :root{
-      --green:#2f6f44;
-      --green-soft:#ecfdf3;
-      --orange:#b45309;
-      --orange-soft:#fff7ed;
-      --red:#b91c1c;
-      --red-soft:#fef2f2;
-      --blue:#1d4ed8;
-      --blue-soft:#eff6ff;
-      --gray:#6b7280;
-      --bg:#f3f6f4;
-      --card:#ffffff;
-      --line:#e5e7eb;
-    }
-
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family:Arial,sans-serif;
-      background:var(--bg);
-      color:#111;
-    }
-
-    header{
-      background:var(--green);
-      color:#fff;
-      padding:18px 16px;
-      text-align:center;
-      font-size:24px;
-      font-weight:bold;
-      box-shadow:0 2px 10px rgba(0,0,0,0.12);
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
-
-    .container{
-      max-width:1000px;
-      margin:0 auto;
-      padding:18px;
-    }
-
-    .card{
-      background:var(--card);
-      margin:16px 0;
-      padding:22px;
-      border-radius:18px;
-      box-shadow:0 3px 12px rgba(0,0,0,0.08);
-      border:1px solid rgba(0,0,0,0.05);
-    }
-
-    h2{
-      margin:0 0 16px 0;
-      font-size:24px;
-      text-align:center;
-    }
-
-    .location-input{
-      width:100%;
-      padding:15px;
-      border:1px solid #ccc;
-      border-radius:12px;
-      font-size:18px;
-      margin-bottom:12px;
-      background:#fff;
-    }
-
-    .btn-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-
-    button{
-      background:var(--green);
-      color:#fff;
-      border:none;
-      padding:14px 18px;
-      border-radius:12px;
-      font-size:16px;
-      cursor:pointer;
-      min-width:170px;
-      font-weight:bold;
-    }
-
-    button.secondary{ background:#4b5563; }
-    button.light{ background:#eef2f7; color:#111; }
-    button.blue{ background:var(--blue); color:#fff; }
-    button.red{ background:#991b1b; color:#fff; }
-
-    .footer-note{
-      text-align:center;
-      color:var(--gray);
-      font-size:14px;
-      margin-top:12px;
-    }
-
-    .center{text-align:center}
-
-    .place-name{
-      font-size:22px;
-      font-weight:bold;
-      margin-bottom:8px;
-    }
-
-    .coords{
-      color:var(--gray);
-      font-size:15px;
-    }
-
-    .alert-banner{
-      border-radius:18px;
-      padding:18px;
-      text-align:center;
-      font-weight:bold;
-      font-size:20px;
-      border:2px solid var(--line);
-    }
-
-    .good{
-      background:var(--green-soft);
-      border-color:#b7ebc6;
-      color:#166534;
-    }
-
-    .warn{
-      background:var(--orange-soft);
-      border-color:#fed7aa;
-      color:var(--orange);
-    }
-
-    .bad{
-      background:var(--red-soft);
-      border-color:#fecaca;
-      color:var(--red);
-    }
-
-    .info{
-      background:var(--blue-soft);
-      border-color:#bfdbfe;
-      color:var(--blue);
-    }
-
-    .decision-wrap{
-      border-radius:18px;
-      padding:22px;
-      text-align:center;
-      border:2px solid var(--line);
-    }
-
-    .decision-title{
-      font-size:18px;
-      color:var(--gray);
-      margin-bottom:10px;
-    }
-
-    .decision-main{
-      font-size:36px;
-      font-weight:bold;
-      margin-bottom:14px;
-      line-height:1.2;
-    }
-
-    .decision-reason{
-      font-size:18px;
-      line-height:1.5;
-      max-width:700px;
-      margin:0 auto 14px auto;
-    }
-
-    .decision-actions{
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .compare-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-    }
-
-    .compare-card{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:18px;
-      text-align:center;
-      background:#fafafa;
-    }
-
-    .compare-title{
-      font-size:17px;
-      font-weight:bold;
-      margin-bottom:10px;
-    }
-
-    .compare-big{
-      font-size:28px;
-      font-weight:bold;
-      margin-bottom:8px;
-    }
-
-    .compare-small{
-      color:var(--gray);
-      line-height:1.5;
-      font-size:15px;
-    }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-    }
-
-    .mini{
-      background:#f8faf8;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:16px;
-      text-align:center;
-    }
-
-    .mini-title{
-      color:var(--gray);
-      font-size:15px;
-      margin-bottom:8px;
-    }
-
-    .mini-value{
-      font-size:28px;
-      font-weight:bold;
-    }
-
-    .risk-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-    }
-
-    .risk-card{
-      border-radius:14px;
-      padding:18px;
-      text-align:center;
-      border:1px solid var(--line);
-      background:#fff;
-    }
-
-    .risk-title{
-      font-size:20px;
-      font-weight:bold;
-      margin-bottom:10px;
-    }
-
-    .risk-value{
-      font-size:28px;
-      font-weight:bold;
-      margin-bottom:10px;
-    }
-
-    .risk-text{
-      font-size:15px;
-      line-height:1.4;
-    }
-
-    .why-box{
-      margin-top:14px;
-      padding:16px;
-      border-radius:12px;
-      background:#f8fafc;
-      border:1px solid var(--line);
-      display:none;
-      text-align:left;
-      line-height:1.6;
-      font-size:16px;
-    }
-
-    .saved-list{
-      display:grid;
-      gap:10px;
-    }
-
-    .saved-item{
-      border:1px solid var(--line);
-      background:#fafafa;
-      border-radius:14px;
-      padding:14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .saved-name{
-      font-size:17px;
-      font-weight:bold;
-    }
-
-    .saved-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .saved-actions button{
-      min-width:auto;
-      padding:10px 12px;
-      font-size:14px;
-    }
-
-    .hour-grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-    }
-
-    .hour-card{
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:14px;
-      text-align:center;
-      background:#fafafa;
-    }
-
-    .hour-time{
-      font-weight:bold;
-      margin-bottom:8px;
-      font-size:16px;
-    }
-
-    .hour-status{
-      font-size:15px;
-      font-weight:bold;
-      margin-bottom:6px;
-    }
-
-    .hour-good{ color:#166534; }
-    .hour-warn{ color:#b45309; }
-    .hour-bad{ color:#b91c1c; }
-
-    .history-item{
-      background:#fafafa;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:16px;
-      margin-top:12px;
-    }
-
-    .history-label{
-      font-size:14px;
-      color:var(--gray);
-      margin-bottom:6px;
-    }
-
-    .history-value{
-      font-size:18px;
-      font-weight:bold;
-    }
-
-    .photo-zone{
-      text-align:center;
-      padding:18px;
-      border:1px dashed #cbd5e1;
-      border-radius:14px;
-      background:#fafafa;
-    }
-
-    .install-box{
-      text-align:center;
-      border:1px dashed #cbd5e1;
-      border-radius:14px;
-      padding:16px;
-      background:#fafafa;
-    }
-
-    .weekly-chart{
-      display:grid;
-      gap:12px;
-    }
-
-    .week-row{
-      display:grid;
-      grid-template-columns:100px 1fr 130px;
-      gap:12px;
-      align-items:center;
-    }
-
-    .week-day{
-      font-weight:bold;
-      font-size:16px;
-    }
-
-    .bar-wrap{
-      width:100%;
-      height:18px;
-      background:#eef2f7;
-      border-radius:999px;
-      overflow:hidden;
-      border:1px solid #dbe2ea;
-    }
-
-    .bar{
-      height:100%;
-      border-radius:999px;
-    }
-
-    .bar-green{ background:#16a34a; }
-    .bar-orange{ background:#ea580c; }
-    .bar-red{ background:#dc2626; }
-
-    .week-label{
-      font-weight:bold;
-      text-align:right;
-    }
-
-    .refresh-box{
-      text-align:center;
-      font-size:14px;
-      color:var(--gray);
-    }
-
-    @media (max-width:760px){
-      .mini-grid{grid-template-columns:repeat(2,1fr)}
-      .compare-grid{grid-template-columns:1fr}
-      .risk-grid{grid-template-columns:1fr}
-      .hour-grid{grid-template-columns:repeat(2,1fr)}
-      .decision-main{font-size:30px}
-      .week-row{grid-template-columns:1fr}
-      .week-label{text-align:left}
-      button{width:100%}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Alerte Vigne</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f3f4f6;
+margin:0;
+text-align:center;
+}
+
+header{
+background:#2f6f44;
+color:white;
+padding:20px;
+font-size:24px;
+font-weight:bold;
+}
+
+.card{
+background:white;
+margin:20px;
+padding:20px;
+border-radius:12px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+input{
+padding:12px;
+width:80%;
+font-size:16px;
+margin:10px;
+}
+
+button{
+padding:12px 18px;
+margin:5px;
+border:none;
+border-radius:8px;
+background:#2f6f44;
+color:white;
+font-size:16px;
+}
+
+.hour-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:10px;
+}
+
+.hour-card{
+background:#f8fafc;
+padding:10px;
+border-radius:10px;
+}
+
+.good{color:green;font-weight:bold}
+.warn{color:orange;font-weight:bold}
+.bad{color:red;font-weight:bold}
+
+</style>
 </head>
+
+
 <body>
-  <header>🍇 Alerte Vigne</header>
-
-  <div class="container">
-
-    <div class="card">
-      <h2>Localisation</h2>
-      <input id="ville" class="location-input" placeholder="Nom de la ville, village ou code postal">
-      <div class="btn-row">
-        <button onclick="chargerMeteo()">Voir météo</button>
-        <button class="secondary" onclick="detectLocation()">Utiliser GPS</button>
-        <button class="blue" onclick="saveLocation()">Garder ce lieu</button>
-      </div>
-      <div class="footer-note" id="statusText">Entrez votre localisation pour obtenir les informations météo et la décision du jour.</div>
-    </div>
-
-    <div class="card">
-      <div class="alert-banner info" id="topAlert">Aucune alerte pour l’instant</div>
-    </div>
-
-    <div class="card center">
-      <h2>Lieu sélectionné</h2>
-      <div class="place-name" id="lieuNom">Aucun lieu sélectionné</div>
-      <div class="coords" id="lieuCoords">Latitude: — | Longitude: —</div>
-    </div>
-
-    <div class="card">
-      <h2>Mes lieux enregistrés</h2>
-      <div class="saved-list" id="savedList">
-        <div class="footer-note">Aucun lieu enregistré</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Décision du jour</h2>
-      <div class="decision-wrap" id="decisionWrap">
-        <div class="decision-title">Recommandation principale</div>
-        <div class="decision-main" id="decisionMain">—</div>
-        <div class="decision-reason" id="decisionReason">La décision apparaîtra après chargement des données météo.</div>
-        <div class="decision-actions">
-          <button class="light" onclick="toggleWhy()">Pourquoi ?</button>
-        </div>
-        <div class="why-box" id="whyBox">Aucune explication disponible pour l’instant.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Météo actuelle</h2>
-      <div class="mini-grid">
-        <div class="mini">
-          <div class="mini-title">Température</div>
-          <div class="mini-value" id="tempNow">—</div>
-        </div>
-        <div class="mini">
-          <div class="mini-title">Humidité</div>
-          <div class="mini-value" id="humidityNow">—</div>
-        </div>
-        <div class="mini">
-          <div class="mini-title">Pluie</div>
-          <div class="mini-value" id="rainNow">—</div>
-        </div>
-        <div class="mini">
-          <div class="mini-title">Vent</div>
-          <div class="mini-value" id="windNow">—</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Comparaison rapide</h2>
-      <div class="compare-grid">
-        <div class="compare-card">
-          <div class="compare-title">Aujourd’hui</div>
-          <div class="compare-big" id="todayTemp">—</div>
-          <div class="compare-small" id="todayInfo">—</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-title">Demain</div>
-          <div class="compare-big" id="tomorrowTemp">—</div>
-          <div class="compare-small" id="tomorrowInfo">—</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-title">Après-demain</div>
-          <div class="compare-big" id="afterTemp">—</div>
-          <div class="compare-small" id="afterInfo">—</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Fenêtres horaires simplifiées</h2>
-      <div class="hour-grid" id="hourGrid">
-        <div class="hour-card"><div class="hour-time">06h</div><div class="hour-status">—</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Quand traiter dans la semaine</h2>
-      <div class="weekly-chart" id="weeklyChart">
-        <div class="footer-note">Le graphique apparaîtra après chargement météo.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Risques maladies</h2>
-      <div class="risk-grid">
-        <div class="risk-card" id="mildiouCard">
-          <div class="risk-title">Mildiou</div>
-          <div class="risk-value" id="mildiouValue">—</div>
-          <div class="risk-text" id="mildiouText">Aucune donnée</div>
-        </div>
-        <div class="risk-card" id="oidiumCard">
-          <div class="risk-title">Oïdium</div>
-          <div class="risk-value" id="oidiumValue">—</div>
-          <div class="risk-text" id="oidiumText">Aucune donnée</div>
-        </div>
-        <div class="risk-card" id="blackrotCard">
-          <div class="risk-title">Black rot</div>
-          <div class="risk-value" id="blackrotValue">—</div>
-          <div class="risk-text" id="blackrotText">Aucune donnée</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Historique rapide</h2>
-      <div class="history-item">
-        <div class="history-label">Dernier lieu consulté</div>
-        <div class="history-value" id="historyPlace">Aucun</div>
-      </div>
-      <div class="history-item">
-        <div class="history-label">Dernière décision</div>
-        <div class="history-value" id="historyDecision">Aucune</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Mise à jour automatique</h2>
-      <div class="refresh-box" id="refreshInfo">Actualisation automatique toutes les 3 heures quand l’application reste ouverte.</div>
-    </div>
-
-    <div class="card">
-      <h2>Photo de la vigne</h2>
-      <div class="photo-zone">
-        <input type="file" id="photoInput" accept="image/*">
-        <div class="btn-row" style="margin-top:14px;">
-          <button onclick="sendPhoto()">Envoyer photo</button>
-        </div>
-        <div class="footer-note" id="photoStatus">Module photo prêt. Analyse IA à connecter ensuite.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Installer sur le téléphone</h2>
-      <div class="install-box">
-        <div class="footer-note">
-          Android: menu du navigateur → Ajouter à l’écran d’accueil.<br>
-          iPhone: Safari → Partager → Sur l’écran d’accueil.
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    let whyVisible = false;
-    let lastLoadedPlace = null;
-
-    function setStatus(text){
-      document.getElementById("statusText").textContent = text;
-    }
-
-    function setPlace(name, lat, lon){
-      document.getElementById("lieuNom").textContent = name;
-      document.getElementById("lieuCoords").textContent =
-        "Latitude: " + lat.toFixed(5) + " | Longitude: " + lon.toFixed(5);
-      lastLoadedPlace = name;
-      localStorage.setItem("currentPlaceName", name);
-      localStorage.setItem("lastRefreshAt", String(Date.now()));
-      updateRefreshInfo();
-    }
-
-    function toggleWhy(){
-      const box = document.getElementById("whyBox");
-      whyVisible = !whyVisible;
-      box.style.display = whyVisible ? "block" : "none";
-    }
-
-    function sendPhoto(){
-      const input = document.getElementById("photoInput");
-      if(!input.files || !input.files.length){
-        document.getElementById("photoStatus").textContent = "Veuillez choisir une photo avant envoi.";
-        return;
-      }
-      document.getElementById("photoStatus").textContent = "Photo reçue. Le module IA sera connecté ensuite.";
-    }
-
-    function getSavedPlaces(){
-      return JSON.parse(localStorage.getItem("savedPlaces") || "[]");
-    }
-
-    function setSavedPlaces(list){
-      localStorage.setItem("savedPlaces", JSON.stringify(list));
-    }
-
-    function saveLocation(){
-      const currentName = document.getElementById("lieuNom").textContent;
-      if(currentName === "Aucun lieu sélectionné"){
-        alert("Choisissez d'abord un lieu.");
-        return;
-      }
-
-      const list = getSavedPlaces();
-      if(!list.includes(currentName)){
-        list.push(currentName);
-        setSavedPlaces(list);
-      }
-      renderSavedPlaces();
-      alert("Lieu enregistré.");
-    }
-
-    function removeSavedPlace(name){
-      const list = getSavedPlaces().filter(p => p !== name);
-      setSavedPlaces(list);
-      renderSavedPlaces();
-    }
-
-    function loadSavedPlace(name){
-      document.getElementById("ville").value = name;
-      chargerMeteo();
-    }
-
-    function renderSavedPlaces(){
-      const container = document.getElementById("savedList");
-      const list = getSavedPlaces();
-
-      if(!list.length){
-        container.innerHTML = '<div class="footer-note">Aucun lieu enregistré</div>';
-        return;
-      }
-
-      container.innerHTML = list.map(name => `
-        <div class="saved-item">
-          <div class="saved-name">${name}</div>
-          <div class="saved-actions">
-            <button class="light" onclick="loadSavedPlace(${JSON.stringify(name)})">Charger</button>
-            <button class="red" onclick="removeSavedPlace(${JSON.stringify(name)})">Effacer</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function updateHistory(place, decision){
-      localStorage.setItem("historyPlace", place || "");
-      localStorage.setItem("historyDecision", decision || "");
-      renderHistory();
-    }
-
-    function renderHistory(){
-      document.getElementById("historyPlace").textContent = localStorage.getItem("historyPlace") || "Aucun";
-      document.getElementById("historyDecision").textContent = localStorage.getItem("historyDecision") || "Aucune";
-    }
-
-    function updateTopAlert(type, text){
-      const box = document.getElementById("topAlert");
-      box.className = "alert-banner " + type;
-      box.textContent = text;
-    }
-
-    function updateRefreshInfo(){
-      const last = Number(localStorage.getItem("lastRefreshAt") || 0);
-      if(!last){
-        document.getElementById("refreshInfo").textContent = "Actualisation automatique toutes les 3 heures quand l’application reste ouverte.";
-        return;
-      }
-      const d = new Date(last);
-      document.getElementById("refreshInfo").textContent =
-        "Dernière mise à jour: " + d.toLocaleString("fr-FR") + ". Actualisation automatique toutes les 3 heures.";
-    }
-
-    async function chargerMeteo(){
-      const ville = document.getElementById("ville").value.trim();
-      if(!ville){
-        alert("Entrez une ville, un village ou un code postal.");
-        return;
-      }
-
-      setStatus("Recherche du lieu...");
-      try{
-        const geo = await fetch("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(ville) + "&count=1&language=fr&format=json");
-        const g = await geo.json();
-
-        if(!g.results || !g.results.length){
-          setStatus("Lieu non trouvé.");
-          return;
-        }
-
-        const place = g.results[0];
-        const lat = place.latitude;
-        const lon = place.longitude;
-        const nameParts = [place.name, place.admin1, place.country].filter(Boolean);
-        const placeName = nameParts.join(", ");
-
-        setPlace(placeName, lat, lon);
-        setStatus("Chargement météo...");
-        await loadWeatherByCoords(lat, lon, placeName);
-        setStatus("Informations mises à jour.");
-      }catch(e){
-        setStatus("Erreur pendant la recherche du lieu.");
-      }
-    }
-
-    function detectLocation(){
-      if(!navigator.geolocation){
-        setStatus("La géolocalisation n'est pas supportée sur cet appareil.");
-        return;
-      }
-
-      setStatus("Détection de votre position...");
-      navigator.geolocation.getCurrentPosition(async function(pos){
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        let display = "Position actuelle";
-
-        try{
-          const reverse = await fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon);
-          const data = await reverse.json();
-          display = data.display_name || "Position actuelle";
-          document.getElementById("ville").value = display;
-        }catch(e){}
-
-        setPlace(display, lat, lon);
-        setStatus("Chargement météo...");
-        await loadWeatherByCoords(lat, lon, display);
-        setStatus("Informations mises à jour.");
-      }, function(){
-        setStatus("Impossible d'obtenir la position.");
-      });
-    }
-
-    function renderHourWindows(wind, rain){
-      const grid = document.getElementById("hourGrid");
-      const hours = [
-        {time:"06h", wind:wind - 4, rain:rain},
-        {time:"09h", wind:wind - 2, rain:rain},
-        {time:"12h", wind:wind + 2, rain:rain + 0.3},
-        {time:"18h", wind:wind - 1, rain:rain}
-      ];
-
-      grid.innerHTML = hours.map(h => {
-        let status = "Correct";
-        let cls = "hour-warn";
-
-        if(h.wind <= 15 && h.rain < 0.5){
-          status = "Idéal";
-          cls = "hour-good";
-        } else if(h.wind > 25 || h.rain >= 1.5){
-          status = "À éviter";
-          cls = "hour-bad";
-        }
-
-        return `
-          <div class="hour-card">
-            <div class="hour-time">${h.time}</div>
-            <div class="hour-status ${cls}">${status}</div>
-            <div class="footer-note">Vent ${Math.round(h.wind)} km/h<br>Pluie ${h.rain.toFixed(1)} mm</div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function riskColorClass(score){
-      if(score >= 70) return "bar-red";
-      if(score >= 40) return "bar-orange";
-      return "bar-green";
-    }
-
-    function decisionLabelFromScore(score, wind, rain){
-      if(wind > 25) return "Éviter";
-      if(score >= 70 && rain < 2) return "Traiter";
-      if(score >= 40) return "Surveiller";
-      return "Attendre";
-    }
-
-    function renderWeeklyChart(data){
-      const days = ["Aujourd’hui","Demain","J+2","J+3","J+4","J+5","J+6"];
-      const chart = document.getElementById("weeklyChart");
-
-      const rows = days.map((day, i) => {
-        const rain = data.daily.precipitation_sum[i] ?? 0;
-        const wind = data.daily.wind_speed_10m_max[i] ?? 0;
-        const tmax = data.daily.temperature_2m_max[i] ?? 0;
-        const baseHumidity = Number(document.getElementById("humidityNow").textContent.replace("%","")) || 70;
-
-        let score = 0;
-        if(baseHumidity >= 85) score += 30;
-        else if(baseHumidity >= 70) score += 18;
-        if(rain >= 2) score += 25;
-        else if(rain > 0.5) score += 12;
-        if(tmax >= 18 && tmax <= 27) score += 20;
-        if(wind <= 18) score += 10;
-        if(wind > 25) score -= 15;
-
-        score = Math.max(0, Math.min(100, score));
-        const label = decisionLabelFromScore(score, wind, rain);
-        const barClass = riskColorClass(score);
-
-        return `
-          <div class="week-row">
-            <div class="week-day">${day}</div>
-            <div class="bar-wrap">
-              <div class="bar ${barClass}" style="width:${score}%"></div>
-            </div>
-            <div class="week-label">${label}</div>
-          </div>
-        `;
-      }).join("");
-
-      chart.innerHTML = rows;
-    }
-
-    async function loadWeatherByCoords(lat, lon, placeName){
-      const url =
-        "https://api.open-meteo.com/v1/forecast?latitude=" + lat +
-        "&longitude=" + lon +
-        "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m" +
-        "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max" +
-        "&timezone=auto&forecast_days=7";
-
-      const response = await fetch(url);
-      const data = await response.json();
-
-      const tempNow = data.current.temperature_2m;
-      const humidityNow = data.current.relative_humidity_2m;
-      const rainNow = data.current.precipitation;
-      const windNow = data.current.wind_speed_10m;
-
-      document.getElementById("tempNow").textContent = tempNow + "°C";
-      document.getElementById("humidityNow").textContent = humidityNow + "%";
-      document.getElementById("rainNow").textContent = rainNow + " mm";
-      document.getElementById("windNow").textContent = windNow + " km/h";
-
-      document.getElementById("todayTemp").textContent = data.daily.temperature_2m_max[0] + "°C";
-      document.getElementById("todayInfo").textContent =
-        "Pluie: " + data.daily.precipitation_sum[0] + " mm | Vent max: " + data.daily.wind_speed_10m_max[0] + " km/h";
-
-      document.getElementById("tomorrowTemp").textContent = data.daily.temperature_2m_max[1] + "°C";
-      document.getElementById("tomorrowInfo").textContent =
-        "Pluie: " + data.daily.precipitation_sum[1] + " mm | Vent max: " + data.daily.wind_speed_10m_max[1] + " km/h";
-
-      document.getElementById("afterTemp").textContent = data.daily.temperature_2m_max[2] + "°C";
-      document.getElementById("afterInfo").textContent =
-        "Pluie: " + data.daily.precipitation_sum[2] + " mm | Vent max: " + data.daily.wind_speed_10m_max[2] + " km/h";
-
-      renderHourWindows(windNow, rainNow);
-      renderWeeklyChart(data);
-
-      const decision = calculateRisksAndDecision(data);
-      updateHistory(placeName, decision);
-    }
-
-    function getRisk(score){
-      if(score >= 70) return {label:"Élevé", cls:"bad"};
-      if(score >= 40) return {label:"Moyen", cls:"warn"};
-      return {label:"Faible", cls:"good"};
-    }
-
-    function applyRisk(cardId, valueId, textId, score, text){
-      const risk = getRisk(score);
-      const card = document.getElementById(cardId);
-      card.className = "risk-card " + risk.cls;
-      document.getElementById(valueId).textContent = risk.label;
-      document.getElementById(textId).textContent = text;
-    }
-
-    function calculateRisksAndDecision(data){
-      const tempNow = data.current.temperature_2m;
-      const humidityNow = data.current.relative_humidity_2m;
-      const rainNow = data.current.precipitation;
-      const windNow = data.current.wind_speed_10m;
-
-      const rainTomorrow = data.daily.precipitation_sum[1];
-      const rainAfter = data.daily.precipitation_sum[2];
-      const windTomorrow = data.daily.wind_speed_10m_max[1];
-      const windAfter = data.daily.wind_speed_10m_max[2];
-
-      let mildiouScore = 0;
-      if(humidityNow >= 85) mildiouScore += 35;
-      else if(humidityNow >= 70) mildiouScore += 20;
-      if(rainNow >= 1) mildiouScore += 15;
-      if(rainTomorrow >= 2) mildiouScore += 25;
-      if(tempNow >= 18 && tempNow <= 25) mildiouScore += 20;
-      if(windNow <= 18) mildiouScore += 10;
-
-      let oidiumScore = 0;
-      if(tempNow >= 20 && tempNow <= 30) oidiumScore += 35;
-      if(humidityNow >= 55 && humidityNow <= 80) oidiumScore += 20;
-      if(rainTomorrow < 2) oidiumScore += 15;
-      if(windNow <= 20) oidiumScore += 10;
-
-      let blackrotScore = 0;
-      if(rainTomorrow >= 2 || rainAfter >= 2) blackrotScore += 30;
-      if(humidityNow >= 75) blackrotScore += 25;
-      if(tempNow >= 16 && tempNow <= 27) blackrotScore += 20;
-      if(windNow <= 18) blackrotScore += 10;
-
-      applyRisk("mildiouCard", "mildiouValue", "mildiouText", mildiouScore,
-        "Humidité, pluie actuelle et pluie prévue.");
-      applyRisk("oidiumCard", "oidiumValue", "oidiumText", oidiumScore,
-        "Température modérée-chaude et humidité intermédiaire.");
-      applyRisk("blackrotCard", "blackrotValue", "blackrotText", blackrotScore,
-        "Pluie prévue, humidité élevée et température favorable.");
-
-      const maxRisk = Math.max(mildiouScore, oidiumScore, blackrotScore);
-      const wrap = document.getElementById("decisionWrap");
-      const main = document.getElementById("decisionMain");
-      const reason = document.getElementById("decisionReason");
-      const why = document.getElementById("whyBox");
-
-      wrap.className = "decision-wrap";
-      main.className = "decision-main";
-
-      let decisionText = "Attendre";
-
-      if(windNow > 25 || windTomorrow > 30){
-        wrap.classList.add("bad");
-        decisionText = "Éviter traitement";
-        main.textContent = decisionText;
-        reason.textContent = "Le vent est trop fort pour un traitement fiable.";
-        why.textContent = "Le vent actuel ou prévu est trop élevé. Le produit risque d’être mal déposé ou dispersé hors cible.";
-        updateTopAlert("bad", "🔴 Alerte rouge — traitement déconseillé à cause du vent");
-        return decisionText;
-      }
-
-      if(maxRisk >= 70 && rainTomorrow < 2){
-        wrap.classList.add("bad");
-        decisionText = "Traiter aujourd’hui";
-        main.textContent = decisionText;
-        reason.textContent = "Le risque est élevé et la fenêtre météo est acceptable aujourd’hui.";
-        why.textContent = "Le risque maladie est élevé, la pluie prévue reste limitée et le vent reste acceptable.";
-        updateTopAlert("bad", "🔴 Alerte élevée — intervention recommandée aujourd’hui");
-        return decisionText;
-      }
-
-      if(maxRisk >= 45 && rainTomorrow <= 4 && windTomorrow <= 25){
-        wrap.classList.add("warn");
-        decisionText = "Traiter demain matin";
-        main.textContent = decisionText;
-        reason.textContent = "Le risque est modéré à élevé et demain semble plus favorable.";
-        why.textContent = "Le niveau de risque monte, mais la fenêtre de demain matin paraît plus stable.";
-        updateTopAlert("warn", "🟠 Alerte moyenne — traitement conseillé demain matin");
-        return decisionText;
-      }
-
-      if(rainAfter < rainTomorrow && windAfter <= windTomorrow){
-        wrap.classList.add("info");
-        decisionText = "Surveiller jusqu’après-demain";
-        main.textContent = decisionText;
-        reason.textContent = "Une meilleure fenêtre pourrait arriver après-demain.";
-        why.textContent = "Les conditions après-demain semblent plus propres que demain.";
-        updateTopAlert("info", "🔵 Surveillance — meilleure fenêtre possible après-demain");
-        return decisionText;
-      }
-
-      wrap.classList.add("good");
-      decisionText = "Attendre";
-      main.textContent = decisionText;
-      reason.textContent = "Le risque reste faible ou modéré pour le moment.";
-      why.textContent = "Les indicateurs météo ne montrent pas encore une pression suffisante pour justifier un traitement immédiat.";
-      updateTopAlert("good", "🟢 Situation calme — surveillance simple");
-      return decisionText;
-    }
-
-    async function refreshIfNeeded(){
-      const saved = localStorage.getItem("currentPlaceName");
-      const last = Number(localStorage.getItem("lastRefreshAt") || 0);
-      const threeHours = 3 * 60 * 60 * 1000;
-      if(saved && Date.now() - last >= threeHours){
-        document.getElementById("ville").value = saved;
-        await chargerMeteo();
-      }
-    }
-
-    renderSavedPlaces();
-    renderHistory();
-    updateRefreshInfo();
-
-    setInterval(async () => {
-      const saved = localStorage.getItem("currentPlaceName");
-      if(saved){
-        document.getElementById("ville").value = saved;
-        await chargerMeteo();
-      }
-    }, 3 * 60 * 60 * 1000);
-
-    document.addEventListener("visibilitychange", async () => {
-      if(!document.hidden){
-        await refreshIfNeeded();
-      }
-    });
-
-    window.addEventListener("load", async () => {
-      await refreshIfNeeded();
-    });
-  </script>
+
+<header>
+🍇 Alerte Vigne
+</header>
+
+
+<div class="card">
+
+<h2>Localisation</h2>
+
+<input id="ville" placeholder="Nom de la ville ou village">
+
+<br>
+
+<button onclick="getWeather()">Voir météo</button>
+<button onclick="gps()">Utiliser GPS</button>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Météo actuelle</h2>
+
+<div id="meteo">---</div>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Décision traitement</h2>
+
+<div id="decision">---</div>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Meilleure heure pour traiter</h2>
+
+<div class="hour-grid" id="hours"></div>
+
+</div>
+
+
+
+<script>
+
+
+function gps(){
+
+navigator.geolocation.getCurrentPosition(function(pos){
+
+loadWeather(pos.coords.latitude,pos.coords.longitude)
+
+})
+
+}
+
+
+
+function getWeather(){
+
+let ville=document.getElementById("ville").value
+
+fetch("https://geocoding-api.open-meteo.com/v1/search?name="+ville)
+
+.then(r=>r.json())
+.then(data=>{
+
+let lat=data.results[0].latitude
+let lon=data.results[0].longitude
+
+loadWeather(lat,lon)
+
+})
+
+}
+
+
+
+function loadWeather(lat,lon){
+
+let url="https://api.open-meteo.com/v1/forecast?latitude="+lat+
+"&longitude="+lon+
+"&current=temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m"+
+"&hourly=temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m"+
+"&daily=precipitation_sum,wind_speed_10m_max"+
+"&timezone=auto"
+
+fetch(url)
+.then(r=>r.json())
+.then(data=>{
+
+let temp=data.current.temperature_2m
+let rain=data.current.precipitation
+let wind=data.current.wind_speed_10m
+
+document.getElementById("meteo").innerHTML=
+
+"Température : "+temp+"°C<br>"+
+"Pluie : "+rain+" mm<br>"+
+"Vent : "+wind+" km/h"
+
+
+decision(data)
+
+hours(data.hourly)
+
+})
+
+}
+
+
+
+function decision(data){
+
+let rainTomorrow=data.daily.precipitation_sum[1]
+let wind=data.current.wind_speed_10m
+let humidity=data.current.relative_humidity_2m
+
+let text="Attendre"
+
+if(wind>25){
+
+text="❌ Éviter traitement (vent fort)"
+
+}
+
+else if(rainTomorrow>10){
+
+text="❌ Éviter traitement aujourd'hui (pluie forte demain)"
+
+}
+
+else if(rainTomorrow>2){
+
+text="⚠ Traiter seulement si fenêtre sèche"
+
+}
+
+else if(humidity>85){
+
+text="⚠ Risque mildiou — traitement conseillé"
+
+}
+
+else{
+
+text="✅ Situation calme"
+
+}
+
+document.getElementById("decision").innerHTML=text
+
+}
+
+
+
+function hours(hourly){
+
+let container=document.getElementById("hours")
+
+container.innerHTML=""
+
+for(let i=0;i<8;i++){
+
+let hour=hourly.time[i].split("T")[1]
+
+let wind=hourly.wind_speed_10m[i]
+
+let rain=hourly.precipitation[i]
+
+let status="Correct"
+let cls="warn"
+
+if(wind<15 && rain<0.3){
+status="Idéal"
+cls="good"
+}
+
+if(wind>25 || rain>1){
+status="À éviter"
+cls="bad"
+}
+
+container.innerHTML+=`
+
+<div class="hour-card">
+
+${hour}<br>
+
+<span class="${cls}">${status}</span><br>
+
+Vent ${wind} km/h<br>
+
+Pluie ${rain} mm
+
+</div>
+
+`
+
+}
+
+}
+
+
+
+</script>
+
 </body>
 </html>
