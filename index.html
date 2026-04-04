@@ -1,59 +1,632 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alerte Vigne</title>
-<style>
-body{font-family:Arial,sans-serif;background:#f3f6f4;margin:0;text-align:center}
-header{background:#2f6f44;color:#fff;padding:20px;font-size:24px}
-.box{background:#fff;margin:20px;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1)}
-button{background:#2f6f44;color:#fff;border:none;padding:12px 20px;border-radius:8px;font-size:16px}
-input{padding:10px;width:80%;margin:10px;font-size:16px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerte Vigne</title>
+  <style>
+    :root{
+      --green:#2f6f44;
+      --green-soft:#ecfdf3;
+      --orange:#b45309;
+      --orange-soft:#fff7ed;
+      --red:#b91c1c;
+      --red-soft:#fef2f2;
+      --gray:#6b7280;
+      --bg:#f3f6f4;
+      --card:#ffffff;
+      --line:#e5e7eb;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:var(--bg);
+      color:#111;
+    }
+
+    header{
+      background:var(--green);
+      color:#fff;
+      padding:22px 18px;
+      text-align:center;
+      font-size:24px;
+      font-weight:bold;
+      box-shadow:0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .container{
+      max-width:900px;
+      margin:0 auto;
+      padding:18px;
+    }
+
+    .card{
+      background:var(--card);
+      margin:16px 0;
+      padding:22px;
+      border-radius:18px;
+      box-shadow:0 3px 12px rgba(0,0,0,0.08);
+      border:1px solid rgba(0,0,0,0.04);
+    }
+
+    h2{
+      margin:0 0 16px 0;
+      font-size:24px;
+      text-align:center;
+    }
+
+    .sub{
+      text-align:center;
+      color:var(--gray);
+      font-size:14px;
+    }
+
+    .location-input{
+      width:100%;
+      padding:15px;
+      border:1px solid #ccc;
+      border-radius:12px;
+      font-size:18px;
+      margin-bottom:12px;
+      background:#fff;
+    }
+
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    button{
+      background:var(--green);
+      color:#fff;
+      border:none;
+      padding:14px 18px;
+      border-radius:12px;
+      font-size:17px;
+      cursor:pointer;
+      min-width:170px;
+      font-weight:bold;
+    }
+
+    button.secondary{
+      background:#4b5563;
+    }
+
+    button.light{
+      background:#eef2f7;
+      color:#111;
+    }
+
+    .center{text-align:center}
+
+    .place-name{
+      font-size:22px;
+      font-weight:bold;
+      margin-bottom:8px;
+    }
+
+    .coords{
+      color:var(--gray);
+      font-size:15px;
+    }
+
+    .decision-wrap{
+      border-radius:18px;
+      padding:22px;
+      text-align:center;
+      border:2px solid var(--line);
+    }
+
+    .decision-title{
+      font-size:18px;
+      color:var(--gray);
+      margin-bottom:10px;
+    }
+
+    .decision-main{
+      font-size:36px;
+      font-weight:bold;
+      margin-bottom:14px;
+      line-height:1.2;
+    }
+
+    .decision-reason{
+      font-size:18px;
+      line-height:1.5;
+      max-width:650px;
+      margin:0 auto 14px auto;
+    }
+
+    .decision-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .good{
+      background:var(--green-soft);
+      border-color:#b7ebc6;
+    }
+
+    .warn{
+      background:var(--orange-soft);
+      border-color:#fed7aa;
+    }
+
+    .bad{
+      background:var(--red-soft);
+      border-color:#fecaca;
+    }
+
+    .status-good{color:#166534}
+    .status-warn{color:var(--orange)}
+    .status-bad{color:var(--red)}
+
+    .compare-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+
+    .compare-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:18px;
+      text-align:center;
+      background:#fafafa;
+    }
+
+    .compare-title{
+      font-size:17px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .compare-big{
+      font-size:28px;
+      font-weight:bold;
+      margin-bottom:8px;
+    }
+
+    .compare-small{
+      color:var(--gray);
+      line-height:1.5;
+      font-size:15px;
+    }
+
+    .risk-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+
+    .risk-card{
+      border-radius:14px;
+      padding:18px;
+      text-align:center;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .risk-title{
+      font-size:20px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .risk-value{
+      font-size:28px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .risk-text{
+      font-size:15px;
+      line-height:1.4;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+
+    .mini{
+      background:#f8faf8;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+      text-align:center;
+    }
+
+    .mini-title{
+      color:var(--gray);
+      font-size:15px;
+      margin-bottom:8px;
+    }
+
+    .mini-value{
+      font-size:28px;
+      font-weight:bold;
+    }
+
+    .why-box{
+      margin-top:14px;
+      padding:16px;
+      border-radius:12px;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      display:none;
+      text-align:left;
+      line-height:1.6;
+      font-size:16px;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--gray);
+      font-size:14px;
+      margin-top:12px;
+    }
+
+    @media (max-width:720px){
+      .mini-grid{grid-template-columns:repeat(2,1fr)}
+      .compare-grid{grid-template-columns:1fr}
+      .risk-grid{grid-template-columns:1fr}
+      .decision-main{font-size:30px}
+      button{width:100%}
+    }
+  </style>
 </head>
 <body>
-<header>🍇 Alerte Vigne</header>
+  <header>🍇 Alerte Vigne</header>
 
-<div class="box">
-<h2>Localisation</h2>
-<input id="ville" placeholder="Nom de la ville ou village">
-<br>
-<button onclick="detectLocation()">Utiliser GPS</button>
-<button onclick="chargerMeteo()">Voir météo</button>
-<p id="lieu"></p>
-</div>
+  <div class="container">
 
-<div class="box">
-<h2>Météo</h2>
-<p id="meteo">---</p>
-</div>
+    <div class="card">
+      <h2>Localisation</h2>
+      <input id="ville" class="location-input" placeholder="Nom de la ville, village ou code postal">
+      <div class="btn-row">
+        <button onclick="chargerMeteo()">Voir météo</button>
+        <button class="secondary" onclick="detectLocation()">Utiliser GPS</button>
+      </div>
+      <div class="footer-note" id="statusText">Entrez votre localisation pour obtenir les informations météo et la décision du jour.</div>
+    </div>
 
-<div class="box">
-<h2>Décision traitement</h2>
-<p id="decision">---</p>
-</div>
+    <div class="card center">
+      <h2>Lieu sélectionné</h2>
+      <div class="place-name" id="lieuNom">Aucun lieu sélectionné</div>
+      <div class="coords" id="lieuCoords">Latitude: — | Longitude: —</div>
+    </div>
 
-<script>
-async function chargerMeteo(){
-let ville=document.getElementById("ville").value;
-if(!ville){alert("Entrez une ville");return;}
-let geo=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(ville));
-let g=await geo.json();
-if(!g.results){alert("Ville non trouvée");return;}
-let lat=g.results[0].latitude;
-let lon=g.results[0].longitude;
-let meteo=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m`);
-let data=await meteo.json();
-let temp=data.current.temperature_2m;
-document.getElementById("meteo").innerHTML="Température : "+temp+"°C";
-document.getElementById("decision").innerHTML=temp>20?"Traitement conseillé : demain matin":"Traitement possible : après demain";
-}
-function detectLocation(){
-navigator.geolocation.getCurrentPosition(function(pos){
-document.getElementById("lieu").innerHTML="Latitude "+pos.coords.latitude+" / Longitude "+pos.coords.longitude;
-});
-}
-</script>
+    <div class="card">
+      <h2>Décision du jour</h2>
+      <div class="decision-wrap" id="decisionWrap">
+        <div class="decision-title">Recommandation principale</div>
+        <div class="decision-main" id="decisionMain">—</div>
+        <div class="decision-reason" id="decisionReason">La décision apparaîtra après chargement des données météo.</div>
+        <div class="decision-actions">
+          <button class="light" onclick="toggleWhy()">Pourquoi ?</button>
+        </div>
+        <div class="why-box" id="whyBox">
+          Aucune explication disponible pour l’instant.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Météo actuelle</h2>
+      <div class="mini-grid">
+        <div class="mini">
+          <div class="mini-title">Température</div>
+          <div class="mini-value" id="tempNow">—</div>
+        </div>
+        <div class="mini">
+          <div class="mini-title">Humidité</div>
+          <div class="mini-value" id="humidityNow">—</div>
+        </div>
+        <div class="mini">
+          <div class="mini-title">Pluie</div>
+          <div class="mini-value" id="rainNow">—</div>
+        </div>
+        <div class="mini">
+          <div class="mini-title">Vent</div>
+          <div class="mini-value" id="windNow">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Comparaison rapide</h2>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-title">Aujourd’hui</div>
+          <div class="compare-big" id="todayTemp">—</div>
+          <div class="compare-small" id="todayInfo">—</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-title">Demain</div>
+          <div class="compare-big" id="tomorrowTemp">—</div>
+          <div class="compare-small" id="tomorrowInfo">—</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-title">Après-demain</div>
+          <div class="compare-big" id="afterTemp">—</div>
+          <div class="compare-small" id="afterInfo">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Risques maladies</h2>
+      <div class="risk-grid">
+        <div class="risk-card" id="mildiouCard">
+          <div class="risk-title">Mildiou</div>
+          <div class="risk-value" id="mildiouValue">—</div>
+          <div class="risk-text" id="mildiouText">Aucune donnée</div>
+        </div>
+        <div class="risk-card" id="oidiumCard">
+          <div class="risk-title">Oïdium</div>
+          <div class="risk-value" id="oidiumValue">—</div>
+          <div class="risk-text" id="oidiumText">Aucune donnée</div>
+        </div>
+        <div class="risk-card" id="blackrotCard">
+          <div class="risk-title">Black rot</div>
+          <div class="risk-value" id="blackrotValue">—</div>
+          <div class="risk-text" id="blackrotText">Aucune donnée</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let whyVisible = false;
+
+    function setStatus(text){
+      document.getElementById("statusText").textContent = text;
+    }
+
+    function setPlace(name, lat, lon){
+      document.getElementById("lieuNom").textContent = name;
+      document.getElementById("lieuCoords").textContent =
+        "Latitude: " + lat.toFixed(5) + " | Longitude: " + lon.toFixed(5);
+    }
+
+    function toggleWhy(){
+      const box = document.getElementById("whyBox");
+      whyVisible = !whyVisible;
+      box.style.display = whyVisible ? "block" : "none";
+    }
+
+    async function chargerMeteo(){
+      const ville = document.getElementById("ville").value.trim();
+      if(!ville){
+        alert("Entrez une ville, un village ou un code postal.");
+        return;
+      }
+
+      setStatus("Recherche du lieu...");
+      try{
+        const geo = await fetch("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(ville) + "&count=1&language=fr&format=json");
+        const g = await geo.json();
+
+        if(!g.results || !g.results.length){
+          setStatus("Lieu non trouvé.");
+          return;
+        }
+
+        const place = g.results[0];
+        const lat = place.latitude;
+        const lon = place.longitude;
+        const nameParts = [place.name, place.admin1, place.country].filter(Boolean);
+
+        setPlace(nameParts.join(", "), lat, lon);
+        setStatus("Chargement météo...");
+        await loadWeatherByCoords(lat, lon);
+        setStatus("Informations mises à jour.");
+      }catch(e){
+        setStatus("Erreur pendant la recherche du lieu.");
+      }
+    }
+
+    function detectLocation(){
+      if(!navigator.geolocation){
+        setStatus("La géolocalisation n'est pas supportée sur cet appareil.");
+        return;
+      }
+
+      setStatus("Détection de votre position...");
+      navigator.geolocation.getCurrentPosition(async function(pos){
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        try{
+          const reverse = await fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon);
+          const data = await reverse.json();
+          const display = data.display_name || "Position actuelle";
+          setPlace(display, lat, lon);
+        }catch(e){
+          setPlace("Position actuelle", lat, lon);
+        }
+
+        setStatus("Chargement météo...");
+        await loadWeatherByCoords(lat, lon);
+        setStatus("Informations mises à jour.");
+      }, function(){
+        setStatus("Impossible d'obtenir la position.");
+      });
+    }
+
+    async function loadWeatherByCoords(lat, lon){
+      const url =
+        "https://api.open-meteo.com/v1/forecast?latitude=" + lat +
+        "&longitude=" + lon +
+        "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m" +
+        "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max" +
+        "&timezone=auto&forecast_days=3";
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const tempNow = data.current.temperature_2m;
+      const humidityNow = data.current.relative_humidity_2m;
+      const rainNow = data.current.precipitation;
+      const windNow = data.current.wind_speed_10m;
+
+      document.getElementById("tempNow").textContent = tempNow + "°C";
+      document.getElementById("humidityNow").textContent = humidityNow + "%";
+      document.getElementById("rainNow").textContent = rainNow + " mm";
+      document.getElementById("windNow").textContent = windNow + " km/h";
+
+      document.getElementById("todayTemp").textContent = data.daily.temperature_2m_max[0] + "°C";
+      document.getElementById("todayInfo").textContent =
+        "Pluie: " + data.daily.precipitation_sum[0] + " mm | Vent max: " + data.daily.wind_speed_10m_max[0] + " km/h";
+
+      document.getElementById("tomorrowTemp").textContent = data.daily.temperature_2m_max[1] + "°C";
+      document.getElementById("tomorrowInfo").textContent =
+        "Pluie: " + data.daily.precipitation_sum[1] + " mm | Vent max: " + data.daily.wind_speed_10m_max[1] + " km/h";
+
+      document.getElementById("afterTemp").textContent = data.daily.temperature_2m_max[2] + "°C";
+      document.getElementById("afterInfo").textContent =
+        "Pluie: " + data.daily.precipitation_sum[2] + " mm | Vent max: " + data.daily.wind_speed_10m_max[2] + " km/h";
+
+      calculateRisksAndDecision(data);
+    }
+
+    function getRisk(score){
+      if(score >= 70) return {label:"Élevé", cls:"bad"};
+      if(score >= 40) return {label:"Moyen", cls:"warn"};
+      return {label:"Faible", cls:"good"};
+    }
+
+    function applyRisk(cardId, valueId, textId, score, text){
+      const risk = getRisk(score);
+      const card = document.getElementById(cardId);
+      card.className = "risk-card " + risk.cls;
+      document.getElementById(valueId).textContent = risk.label;
+      document.getElementById(textId).textContent = text;
+    }
+
+    function calculateRisksAndDecision(data){
+      const tempNow = data.current.temperature_2m;
+      const humidityNow = data.current.relative_humidity_2m;
+      const rainNow = data.current.precipitation;
+      const windNow = data.current.wind_speed_10m;
+
+      const rainTomorrow = data.daily.precipitation_sum[1];
+      const rainAfter = data.daily.precipitation_sum[2];
+      const windTomorrow = data.daily.wind_speed_10m_max[1];
+      const windAfter = data.daily.wind_speed_10m_max[2];
+      const tTomorrow = data.daily.temperature_2m_max[1];
+      const tAfter = data.daily.temperature_2m_max[2];
+
+      let mildiouScore = 0;
+      if(humidityNow >= 85) mildiouScore += 35;
+      else if(humidityNow >= 70) mildiouScore += 20;
+      if(rainNow >= 1) mildiouScore += 15;
+      if(rainTomorrow >= 2) mildiouScore += 25;
+      if(tempNow >= 18 && tempNow <= 25) mildiouScore += 20;
+      if(windNow <= 18) mildiouScore += 10;
+
+      let oidiumScore = 0;
+      if(tempNow >= 20 && tempNow <= 30) oidiumScore += 35;
+      if(humidityNow >= 55 && humidityNow <= 80) oidiumScore += 20;
+      if(rainTomorrow < 2) oidiumScore += 15;
+      if(windNow <= 20) oidiumScore += 10;
+
+      let blackrotScore = 0;
+      if(rainTomorrow >= 2 || rainAfter >= 2) blackrotScore += 30;
+      if(humidityNow >= 75) blackrotScore += 25;
+      if(tempNow >= 16 && tempNow <= 27) blackrotScore += 20;
+      if(windNow <= 18) blackrotScore += 10;
+
+      applyRisk(
+        "mildiouCard",
+        "mildiouValue",
+        "mildiouText",
+        mildiouScore,
+        "Basé sur humidité, pluie actuelle et pluie prévue."
+      );
+
+      applyRisk(
+        "oidiumCard",
+        "oidiumValue",
+        "oidiumText",
+        oidiumScore,
+        "Basé sur température modérée-chaude et humidité intermédiaire."
+      );
+
+      applyRisk(
+        "blackrotCard",
+        "blackrotValue",
+        "blackrotText",
+        blackrotScore,
+        "Basé sur pluie prévue, humidité et température favorable."
+      );
+
+      const maxRisk = Math.max(mildiouScore, oidiumScore, blackrotScore);
+      const wrap = document.getElementById("decisionWrap");
+      const main = document.getElementById("decisionMain");
+      const reason = document.getElementById("decisionReason");
+      const why = document.getElementById("whyBox");
+
+      wrap.className = "decision-wrap";
+      main.className = "decision-main";
+
+      if(windNow > 25 || windTomorrow > 30){
+        wrap.classList.add("bad");
+        main.classList.add("status-bad");
+        main.textContent = "Éviter traitement";
+        reason.textContent = "Le vent est trop fort pour un traitement fiable.";
+        why.textContent =
+          "Pourquoi ? Le vent actuel ou prévu est trop élevé. Le produit risque d’être mal déposé ou dispersé hors cible.";
+        return;
+      }
+
+      if(maxRisk >= 70 && rainTomorrow < 2){
+        wrap.classList.add("bad");
+        main.classList.add("status-bad");
+        main.textContent = "Traiter aujourd’hui";
+        reason.textContent = "Le risque est élevé et la fenêtre météo est acceptable aujourd’hui.";
+        why.textContent =
+          "Pourquoi ? Le risque maladie est élevé, la pluie prévue reste limitée et le vent reste acceptable. Une intervention aujourd’hui semble la meilleure fenêtre.";
+        return;
+      }
+
+      if(maxRisk >= 45 && rainTomorrow <= 4 && windTomorrow <= 25){
+        wrap.classList.add("warn");
+        main.classList.add("status-warn");
+        main.textContent = "Traiter demain matin";
+        reason.textContent = "Le risque est modéré à élevé et demain semble plus favorable.";
+        why.textContent =
+          "Pourquoi ? Le niveau de risque monte, mais les conditions de demain matin paraissent plus stables que maintenant pour traiter correctement.";
+        return;
+      }
+
+      if(rainAfter < rainTomorrow && windAfter <= windTomorrow && tAfter >= 16){
+        wrap.classList.add("good");
+        main.classList.add("status-good");
+        main.textContent = "Surveiller jusqu’après-demain";
+        reason.textContent = "Une meilleure fenêtre pourrait arriver après-demain.";
+        why.textContent =
+          "Pourquoi ? Les conditions après-demain paraissent plus propres : moins de pluie ou moins de vent. Mieux vaut surveiller avant d’intervenir.";
+        return;
+      }
+
+      wrap.classList.add("good");
+      main.classList.add("status-good");
+      main.textContent = "Attendre";
+      reason.textContent = "Le risque reste faible ou modéré pour le moment.";
+      why.textContent =
+        "Pourquoi ? Les indicateurs météo ne montrent pas encore une pression suffisamment forte pour justifier un traitement immédiat.";
+    }
+  </script>
 </body>
 </html>
