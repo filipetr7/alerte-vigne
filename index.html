@@ -1,290 +1,672 @@
-
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alerte Vigne</title>
 
-<title>Alerte Vigne</title>
+  <style>
+    body{
+      font-family:Arial,sans-serif;
+      background:#f3f4f6;
+      margin:0;
+      color:#111;
+    }
 
-<style>
+    header{
+      background:#2f6f44;
+      color:white;
+      padding:20px;
+      font-size:26px;
+      font-weight:bold;
+      text-align:center;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
 
-body{
-font-family:Arial;
-background:#f3f4f6;
-margin:0;
-text-align:center;
-}
+    .container{
+      max-width:1000px;
+      margin:0 auto;
+      padding:14px;
+    }
 
-header{
-background:#2f6f44;
-color:white;
-padding:20px;
-font-size:24px;
-font-weight:bold;
-}
+    .card{
+      background:white;
+      margin:16px 0;
+      padding:20px;
+      border-radius:16px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    }
 
-.card{
-background:white;
-margin:20px;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
+    h2{
+      text-align:center;
+      margin-top:0;
+      font-size:22px;
+    }
 
-input{
-padding:12px;
-width:80%;
-font-size:16px;
-margin:10px;
-}
+    input{
+      width:100%;
+      padding:14px;
+      font-size:18px;
+      border:2px solid #222;
+      border-radius:12px;
+      margin-bottom:12px;
+      box-sizing:border-box;
+    }
 
-button{
-padding:12px 18px;
-margin:5px;
-border:none;
-border-radius:8px;
-background:#2f6f44;
-color:white;
-font-size:16px;
-}
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-.hour-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin-top:10px;
-}
+    button{
+      flex:1;
+      min-width:150px;
+      padding:14px;
+      font-size:18px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      color:white;
+      font-weight:bold;
+    }
 
-.hour-card{
-background:#f8fafc;
-padding:10px;
-border-radius:10px;
-}
+    .green{ background:#2f6f44; }
+    .gray{ background:#5b6475; }
+    .blue{ background:#2d56d6; }
+    .light{ background:#eef2f7; color:#111; }
 
-.good{color:green;font-weight:bold}
-.warn{color:orange;font-weight:bold}
-.bad{color:red;font-weight:bold}
+    .big-value{
+      font-size:34px;
+      font-weight:bold;
+      text-align:center;
+      margin:10px 0;
+    }
 
-</style>
+    .sub{
+      text-align:center;
+      color:#6b7280;
+      line-height:1.5;
+    }
+
+    .banner{
+      padding:18px;
+      border-radius:16px;
+      text-align:center;
+      font-size:22px;
+      font-weight:bold;
+      border:2px solid transparent;
+    }
+
+    .banner-good{
+      background:#ecfdf3;
+      color:#166534;
+      border-color:#b7ebc6;
+    }
+
+    .banner-warn{
+      background:#fff7ed;
+      color:#b45309;
+      border-color:#fed7aa;
+    }
+
+    .banner-bad{
+      background:#fef2f2;
+      color:#b91c1c;
+      border-color:#fecaca;
+    }
+
+    .banner-info{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border-color:#bfdbfe;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+    }
+
+    .mini-box{
+      background:#f8fafc;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:16px;
+      text-align:center;
+    }
+
+    .mini-title{
+      font-size:14px;
+      color:#6b7280;
+      margin-bottom:8px;
+    }
+
+    .mini-value{
+      font-size:28px;
+      font-weight:bold;
+    }
+
+    .risk-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+    }
+
+    .risk-box{
+      border-radius:12px;
+      padding:16px;
+      text-align:center;
+      border:1px solid #e5e7eb;
+      background:#fafafa;
+    }
+
+    .risk-title{
+      font-size:19px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .risk-value{
+      font-size:28px;
+      font-weight:bold;
+      margin-bottom:8px;
+    }
+
+    .risk-text{
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .risk-low{
+      background:#ecfdf3;
+      color:#166534;
+      border-color:#b7ebc6;
+    }
+
+    .risk-mid{
+      background:#fff7ed;
+      color:#b45309;
+      border-color:#fed7aa;
+    }
+
+    .risk-high{
+      background:#fef2f2;
+      color:#b91c1c;
+      border-color:#fecaca;
+    }
+
+    .hours-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+    }
+
+    .hour-box{
+      background:#fafafa;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .hour-time{
+      font-weight:bold;
+      margin-bottom:8px;
+      font-size:17px;
+    }
+
+    .ok{ color:#166534; font-weight:bold; }
+    .mid{ color:#b45309; font-weight:bold; }
+    .bad{ color:#b91c1c; font-weight:bold; }
+
+    .week-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .week-row{
+      display:grid;
+      grid-template-columns:110px 1fr 140px;
+      gap:10px;
+      align-items:center;
+    }
+
+    .bar-wrap{
+      width:100%;
+      height:18px;
+      background:#eef2f7;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid #dbe2ea;
+    }
+
+    .bar{
+      height:100%;
+      border-radius:999px;
+    }
+
+    .bar-green{ background:#16a34a; }
+    .bar-orange{ background:#ea580c; }
+    .bar-red{ background:#dc2626; }
+
+    .small-note{
+      font-size:14px;
+      color:#6b7280;
+      text-align:center;
+      line-height:1.5;
+      margin-top:10px;
+    }
+
+    @media(max-width:800px){
+      .mini-grid{ grid-template-columns:repeat(2,1fr); }
+      .risk-grid{ grid-template-columns:repeat(2,1fr); }
+      .hours-grid{ grid-template-columns:repeat(2,1fr); }
+      .week-row{ grid-template-columns:1fr; }
+    }
+  </style>
 </head>
-
-
 <body>
 
-<header>
-🍇 Alerte Vigne
-</header>
+<header>🍇 Alerte Vigne</header>
 
+<div class="container">
 
-<div class="card">
+  <div class="card">
+    <h2>Localisation</h2>
+    <input id="ville" placeholder="Nom de la ville, village ou code postal" />
+    <div class="btn-row">
+      <button class="green" onclick="getWeather()">Voir météo</button>
+      <button class="gray" onclick="gps()">Utiliser GPS</button>
+    </div>
+    <div class="small-note" id="statusText">Entrez un lieu pour charger les informations.</div>
+  </div>
 
-<h2>Localisation</h2>
+  <div class="card">
+    <div id="topAlert" class="banner banner-info">Aucune alerte pour l’instant</div>
+  </div>
 
-<input id="ville" placeholder="Nom de la ville ou village">
+  <div class="card">
+    <h2>Lieu sélectionné</h2>
+    <div class="big-value" id="placeName">---</div>
+    <div class="sub" id="coords">Latitude: --- | Longitude: ---</div>
+  </div>
 
-<br>
+  <div class="card">
+    <h2>Météo actuelle</h2>
+    <div class="mini-grid">
+      <div class="mini-box">
+        <div class="mini-title">Température</div>
+        <div class="mini-value" id="tempNow">---</div>
+      </div>
+      <div class="mini-box">
+        <div class="mini-title">Humidité</div>
+        <div class="mini-value" id="humidityNow">---</div>
+      </div>
+      <div class="mini-box">
+        <div class="mini-title">Pluie</div>
+        <div class="mini-value" id="rainNow">---</div>
+      </div>
+      <div class="mini-box">
+        <div class="mini-title">Vent</div>
+        <div class="mini-value" id="windNow">---</div>
+      </div>
+    </div>
+  </div>
 
-<button onclick="getWeather()">Voir météo</button>
-<button onclick="gps()">Utiliser GPS</button>
+  <div class="card">
+    <h2>Décision recommandée</h2>
+    <div class="big-value" id="decisionMain">---</div>
+    <div class="sub" id="decisionText">La décision apparaîtra après chargement météo.</div>
+  </div>
+
+  <div class="card">
+    <h2>Risques vignoble</h2>
+    <div class="risk-grid">
+      <div class="risk-box" id="mildiouBox">
+        <div class="risk-title">Mildiou</div>
+        <div class="risk-value" id="mildiouValue">---</div>
+        <div class="risk-text" id="mildiouText">---</div>
+      </div>
+
+      <div class="risk-box" id="oidiumBox">
+        <div class="risk-title">Oïdium</div>
+        <div class="risk-value" id="oidiumValue">---</div>
+        <div class="risk-text" id="oidiumText">---</div>
+      </div>
+
+      <div class="risk-box" id="blackrotBox">
+        <div class="risk-title">Black rot</div>
+        <div class="risk-value" id="blackrotValue">---</div>
+        <div class="risk-text" id="blackrotText">---</div>
+      </div>
+
+      <div class="risk-box" id="eudemisBox">
+        <div class="risk-title">Eudémis</div>
+        <div class="risk-value" id="eudemisValue">---</div>
+        <div class="risk-text" id="eudemisText">---</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Meilleures heures pour traiter</h2>
+    <div class="hours-grid" id="hoursGrid">
+      <div class="small-note">Les créneaux apparaîtront après chargement météo.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Plan semaine</h2>
+    <div class="week-list" id="weekPlan">
+      <div class="small-note">Le plan de la semaine apparaîtra après chargement météo.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Source régionale</h2>
+    <div class="sub">
+      Base prête pour croiser plus tard avec les bulletins BSV / Chambre d’Agriculture.
+      <br><br>
+      Pour l’instant, la décision est calculée avec météo locale + règles agronomiques simples.
+    </div>
+  </div>
 
 </div>
-
-
-
-<div class="card">
-
-<h2>Météo actuelle</h2>
-
-<div id="meteo">---</div>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Décision traitement</h2>
-
-<div id="decision">---</div>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Meilleure heure pour traiter</h2>
-
-<div class="hour-grid" id="hours"></div>
-
-</div>
-
-
 
 <script>
-
-
-function gps(){
-
-navigator.geolocation.getCurrentPosition(function(pos){
-
-loadWeather(pos.coords.latitude,pos.coords.longitude)
-
-})
-
-}
-
-
-
-function getWeather(){
-
-let ville=document.getElementById("ville").value
-
-fetch("https://geocoding-api.open-meteo.com/v1/search?name="+ville)
-
-.then(r=>r.json())
-.then(data=>{
-
-let lat=data.results[0].latitude
-let lon=data.results[0].longitude
-
-loadWeather(lat,lon)
-
-})
-
-}
-
-
-
-function loadWeather(lat,lon){
-
-let url="https://api.open-meteo.com/v1/forecast?latitude="+lat+
-"&longitude="+lon+
-"&current=temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m"+
-"&hourly=temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m"+
-"&daily=precipitation_sum,wind_speed_10m_max"+
-"&timezone=auto"
-
-fetch(url)
-.then(r=>r.json())
-.then(data=>{
-
-let temp=data.current.temperature_2m
-let rain=data.current.precipitation
-let wind=data.current.wind_speed_10m
-
-document.getElementById("meteo").innerHTML=
-
-"Température : "+temp+"°C<br>"+
-"Pluie : "+rain+" mm<br>"+
-"Vent : "+wind+" km/h"
-
-
-decision(data)
-
-hours(data.hourly)
-
-})
-
-}
-
-
-
-function decision(data){
-
-let rainTomorrow=data.daily.precipitation_sum[1]
-let wind=data.current.wind_speed_10m
-let humidity=data.current.relative_humidity_2m
-
-let text="Attendre"
-
-if(wind>25){
-
-text="❌ Éviter traitement (vent fort)"
-
-}
-
-else if(rainTomorrow>10){
-
-text="❌ Éviter traitement aujourd'hui (pluie forte demain)"
-
-}
-
-else if(rainTomorrow>2){
-
-text="⚠ Traiter seulement si fenêtre sèche"
-
-}
-
-else if(humidity>85){
-
-text="⚠ Risque mildiou — traitement conseillé"
-
-}
-
-else{
-
-text="✅ Situation calme"
-
-}
-
-document.getElementById("decision").innerHTML=text
-
-}
-
-
-
-function hours(hourly){
-
-let container=document.getElementById("hours")
-
-container.innerHTML=""
-
-for(let i=0;i<8;i++){
-
-let hour=hourly.time[i].split("T")[1]
-
-let wind=hourly.wind_speed_10m[i]
-
-let rain=hourly.precipitation[i]
-
-let status="Correct"
-let cls="warn"
-
-if(wind<15 && rain<0.3){
-status="Idéal"
-cls="good"
-}
-
-if(wind>25 || rain>1){
-status="À éviter"
-cls="bad"
-}
-
-container.innerHTML+=`
-
-<div class="hour-card">
-
-${hour}<br>
-
-<span class="${cls}">${status}</span><br>
-
-Vent ${wind} km/h<br>
-
-Pluie ${rain} mm
-
-</div>
-
-`
-
-}
-
-}
-
-
-
+  function setStatus(text){
+    document.getElementById("statusText").innerText = text;
+  }
+
+  function setBanner(type, text){
+    const el = document.getElementById("topAlert");
+    el.className = "banner " + type;
+    el.innerText = text;
+  }
+
+  function gps(){
+    if(!navigator.geolocation){
+      setStatus("Géolocalisation non supportée.");
+      return;
+    }
+
+    setStatus("Détection GPS...");
+    navigator.geolocation.getCurrentPosition(function(pos){
+      loadWeather(pos.coords.latitude, pos.coords.longitude, "Position actuelle");
+    }, function(){
+      setStatus("Impossible d’obtenir la position.");
+    });
+  }
+
+  function getWeather(){
+    let ville = document.getElementById("ville").value.trim();
+
+    if(!ville){
+      alert("Entrez une ville ou un village.");
+      return;
+    }
+
+    setStatus("Recherche du lieu...");
+
+    fetch("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(ville) + "&count=1&language=fr&format=json")
+    .then(r => r.json())
+    .then(data => {
+      if(!data.results || !data.results.length){
+        setStatus("Lieu non trouvé.");
+        return;
+      }
+
+      let lat = data.results[0].latitude;
+      let lon = data.results[0].longitude;
+      let place = [data.results[0].name, data.results[0].admin1, data.results[0].country].filter(Boolean).join(", ");
+
+      loadWeather(lat, lon, place);
+    })
+    .catch(() => {
+      setStatus("Erreur pendant la recherche du lieu.");
+    });
+  }
+
+  function loadWeather(lat, lon, place){
+    setStatus("Chargement météo...");
+
+    let url =
+      "https://api.open-meteo.com/v1/forecast?latitude=" + lat +
+      "&longitude=" + lon +
+      "&current=temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m" +
+      "&hourly=temperature_2m,precipitation,wind_speed_10m,relative_humidity_2m" +
+      "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max" +
+      "&timezone=auto&forecast_days=7";
+
+    fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById("placeName").innerText = place;
+      document.getElementById("coords").innerText = "Latitude: " + lat.toFixed(5) + " | Longitude: " + lon.toFixed(5);
+
+      document.getElementById("tempNow").innerText = data.current.temperature_2m + "°C";
+      document.getElementById("humidityNow").innerText = data.current.relative_humidity_2m + "%";
+      document.getElementById("rainNow").innerText = data.current.precipitation + " mm";
+      document.getElementById("windNow").innerText = data.current.wind_speed_10m + " km/h";
+
+      computeRisksAndDecision(data);
+      renderHours(data.hourly);
+      renderWeekPlan(data);
+
+      setStatus("Informations mises à jour.");
+    })
+    .catch(() => {
+      setStatus("Erreur pendant le chargement météo.");
+    });
+  }
+
+  function riskLevel(score){
+    if(score >= 70) return "Élevé";
+    if(score >= 40) return "Moyen";
+    return "Faible";
+  }
+
+  function riskClass(score){
+    if(score >= 70) return "risk-box risk-high";
+    if(score >= 40) return "risk-box risk-mid";
+    return "risk-box risk-low";
+  }
+
+  function setRisk(boxId, valueId, textId, score, text){
+    document.getElementById(boxId).className = riskClass(score);
+    document.getElementById(valueId).innerText = riskLevel(score);
+    document.getElementById(textId).innerText = text;
+  }
+
+  function computeEudemis(data){
+    let avgTemp = (data.daily.temperature_2m_max[0] + data.daily.temperature_2m_min[0]) / 2;
+    let degreeDay = Math.max(0, avgTemp - 10);
+
+    if(degreeDay >= 14){
+      return {score:75, text:"Début vol probable / ponte à surveiller"};
+    }
+    if(degreeDay >= 8){
+      return {score:45, text:"Activité possible"};
+    }
+    return {score:20, text:"Faible activité"};
+  }
+
+  function computeRisksAndDecision(data){
+    let temp = data.current.temperature_2m;
+    let rain = data.current.precipitation;
+    let wind = data.current.wind_speed_10m;
+    let humidity = data.current.relative_humidity_2m;
+
+    let rainTomorrow = data.daily.precipitation_sum[1];
+    let rainAfter = data.daily.precipitation_sum[2];
+    let windTomorrow = data.daily.wind_speed_10m_max[1];
+
+    let mildiou = 0;
+    if(humidity >= 85) mildiou += 35;
+    else if(humidity >= 70) mildiou += 20;
+    if(rain >= 1) mildiou += 15;
+    if(rainTomorrow >= 2) mildiou += 25;
+    if(temp >= 18 && temp <= 25) mildiou += 20;
+    if(wind <= 18) mildiou += 10;
+
+    let oidium = 0;
+    if(temp >= 20 && temp <= 30) oidium += 35;
+    if(humidity >= 55 && humidity <= 80) oidium += 20;
+    if(rainTomorrow < 2) oidium += 15;
+    if(wind <= 20) oidium += 10;
+
+    let blackrot = 0;
+    if(rainTomorrow >= 2 || rainAfter >= 2) blackrot += 30;
+    if(humidity >= 75) blackrot += 25;
+    if(temp >= 16 && temp <= 27) blackrot += 20;
+    if(wind <= 18) blackrot += 10;
+
+    let eudemis = computeEudemis(data);
+
+    setRisk("mildiouBox","mildiouValue","mildiouText",mildiou,"Humidité + pluie + température");
+    setRisk("oidiumBox","oidiumValue","oidiumText",oidium,"Chaleur modérée + humidité moyenne");
+    setRisk("blackrotBox","blackrotValue","blackrotText",blackrot,"Pluie prévue + humidité");
+    setRisk("eudemisBox","eudemisValue","eudemisText",eudemis.score,eudemis.text);
+
+    let decision = "Attendre";
+    let detail = "Situation calme pour le moment.";
+
+    if(wind > 25 || windTomorrow > 30){
+      decision = "Éviter traitement";
+      detail = "Vent trop fort pour un traitement fiable.";
+      setBanner("banner-bad", "🔴 Vent fort — traitement déconseillé");
+    }
+    else if(rainTomorrow >= 10){
+      decision = "Éviter traitement aujourd’hui";
+      detail = "Pluie forte demain : risque de lessivage du produit.";
+      setBanner("banner-bad", "🔴 Pluie forte demain — éviter traitement aujourd’hui");
+    }
+    else if(rainTomorrow >= 2 && rainTomorrow < 10 && (mildiou >= 70 || blackrot >= 70)){
+      decision = "Traiter seulement si fenêtre sèche";
+      detail = "Risque maladie élevé mais pluie demain possible.";
+      setBanner("banner-warn", "🟠 Risque élevé mais pluie demain");
+    }
+    else if(eudemis.score >= 70 && rainTomorrow < 5 && windTomorrow < 25){
+      decision = "Surveiller / intervenir contre eudémis";
+      detail = "Début de vol probable et conditions exploitables.";
+      setBanner("banner-warn", "🟠 Eudémis active — surveillance renforcée");
+    }
+    else if(Math.max(mildiou, oidium, blackrot) >= 70 && rainTomorrow < 2){
+      decision = "Traiter aujourd’hui";
+      detail = "Risque élevé et fenêtre météo favorable.";
+      setBanner("banner-bad", "🔴 Intervention recommandée aujourd’hui");
+    }
+    else if(Math.max(mildiou, oidium, blackrot) >= 45 && rainTomorrow <= 4 && windTomorrow <= 25){
+      decision = "Traiter demain matin";
+      detail = "Risque modéré à élevé, fenêtre plus stable demain matin.";
+      setBanner("banner-warn", "🟠 Traitement conseillé demain matin");
+    }
+    else{
+      decision = "Attendre";
+      detail = "Risque faible ou modéré pour le moment.";
+      setBanner("banner-good", "🟢 Situation calme — surveillance simple");
+    }
+
+    document.getElementById("decisionMain").innerText = decision;
+    document.getElementById("decisionText").innerText = detail;
+  }
+
+  function renderHours(hourly){
+    let container = document.getElementById("hoursGrid");
+    container.innerHTML = "";
+
+    let now = new Date();
+    let count = 0;
+
+    for(let i=0; i<hourly.time.length; i++){
+      let t = new Date(hourly.time[i]);
+      if(t > now && count < 8){
+        let hour = String(t.getHours()).padStart(2,"0") + "h";
+        let wind = hourly.wind_speed_10m[i];
+        let rain = hourly.precipitation[i];
+        let humidity = hourly.relative_humidity_2m[i];
+        let temp = hourly.temperature_2m[i];
+
+        let status = "Correct";
+        let cls = "mid";
+
+        if(wind <= 15 && rain < 0.3 && humidity <= 90){
+          status = "Idéal";
+          cls = "ok";
+        }
+        else if(wind > 25 || rain >= 1.5){
+          status = "À éviter";
+          cls = "bad";
+        }
+
+        container.innerHTML += `
+          <div class="hour-box">
+            <div class="hour-time">${hour}</div>
+            <div class="${cls}">${status}</div>
+            <div class="small-note">
+              ${temp}°C<br>
+              Vent ${Math.round(wind)} km/h<br>
+              Pluie ${rain.toFixed(1)} mm<br>
+              Humidité ${humidity}%
+            </div>
+          </div>
+        `;
+
+        count++;
+      }
+    }
+  }
+
+  function barClass(score){
+    if(score >= 70) return "bar bar-red";
+    if(score >= 40) return "bar bar-orange";
+    return "bar bar-green";
+  }
+
+  function weekDecision(score, wind, rain){
+    if(wind > 25) return "Éviter";
+    if(rain >= 10) return "Attendre";
+    if(score >= 70 && rain < 2) return "Traiter";
+    if(score >= 40) return "Surveiller";
+    return "Attendre";
+  }
+
+  function renderWeekPlan(data){
+    let days = ["Aujourd’hui","Demain","J+2","J+3","J+4","J+5","J+6"];
+    let container = document.getElementById("weekPlan");
+    container.innerHTML = "";
+
+    for(let i=0; i<7; i++){
+      let rain = data.daily.precipitation_sum[i] || 0;
+      let wind = data.daily.wind_speed_10m_max[i] || 0;
+      let tmax = data.daily.temperature_2m_max[i] || 0;
+      let humidity = data.current.relative_humidity_2m || 70;
+
+      let score = 0;
+      if(humidity >= 85) score += 30;
+      else if(humidity >= 70) score += 18;
+      if(rain >= 2) score += 25;
+      else if(rain > 0.5) score += 12;
+      if(tmax >= 18 && tmax <= 27) score += 20;
+      if(wind <= 18) score += 10;
+      if(wind > 25) score -= 15;
+
+      score = Math.max(0, Math.min(100, score));
+
+      container.innerHTML += `
+        <div class="week-row">
+          <div><strong>${days[i]}</strong></div>
+          <div class="bar-wrap">
+            <div class="${barClass(score)}" style="width:${score}%"></div>
+          </div>
+          <div><strong>${weekDecision(score, wind, rain)}</strong></div>
+        </div>
+      `;
+    }
+  }
 </script>
 
 </body>
