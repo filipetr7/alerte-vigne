@@ -358,13 +358,18 @@
     </div>
   </div>
 
-  <div class="card">
-    <h2>Plan semaine</h2>
-    <div class="week-list" id="weekPlan">
-      <div class="small-note">Le plan de la semaine apparaîtra après chargement météo.</div>
-    </div>
+  
+<div class="card">
+  <h2>Plan semaine</h2>
+
+  <div id="weekSummary" class="small-note" style="margin-bottom:18px;">
+    Le plan de la semaine apparaîtra après chargement météo.
   </div>
 
+  <div id="weekCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;"></div>
+
+  <div id="weekList" style="display:grid;gap:10px;"></div>
+</div>
   <div class="card">
     <h2>Source régionale</h2>
     <div class="sub">
