@@ -3,1079 +3,803 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Alerte Vigne V7</title>
-  canvas#riskChart{
-width:100%;
-background:white;
-border-radius:14px;
-}
+<title>Alerte Vigne V8</title>
 
 <style>
+:root{
+  --green:#2f6f3e;
+  --green-soft:#eaf6ee;
+  --orange:#d88a1d;
+  --orange-soft:#fff4e6;
+  --red:#c63d2f;
+  --red-soft:#fdeceb;
+  --blue:#1d4ed8;
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --shadow:0 8px 24px rgba(0,0,0,0.06);
+  --radius:22px;
+}
+
+*{box-sizing:border-box;}
 
 body{
-font-family:Arial;
-background:#f3f4f6;
-margin:0;
-color:#111;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
 .header{
-background:#2f6f3e;
-color:white;
-text-align:center;
-padding:18px;
-font-size:28px;
-font-weight:900;
+  background:var(--green);
+  color:white;
+  text-align:center;
+  padding:20px 16px;
+  font-size:2rem;
+  font-weight:900;
 }
 
 .container{
-max-width:900px;
-margin:auto;
-padding:15px;
+  max-width:980px;
+  margin:0 auto;
+  padding:16px;
 }
 
 .card{
-background:white;
-border-radius:20px;
-padding:18px;
-margin-bottom:18px;
-box-shadow:0 8px 20px rgba(0,0,0,0.05);
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:20px;
+  margin-bottom:18px;
 }
 
-h2{
-text-align:center;
-margin-top:0;
+.card h2{
+  margin:0 0 18px 0;
+  text-align:center;
+  font-size:1.9rem;
+  line-height:1.1;
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-}
-
-.metric{
-border:1px solid #ddd;
-border-radius:14px;
-padding:14px;
-text-align:center;
-}
-
-.metric-title{
-font-size:14px;
-}
-
-.metric-value{
-font-size:26px;
-font-weight:900;
-}
-
-.humidity{
-color:#1d4ed8;
-}
-
-button{
-padding:12px 16px;
-border-radius:12px;
-border:none;
-font-weight:700;
-cursor:pointer;
-}
-
-.btn-green{
-background:#2f6f3e;
-color:white;
-}
-
-.btn-grey{
-background:#666;
-color:white;
-}
-
-.btn-orange{
-background:#d88a1d;
-color:white;
-}
-
-.btn-blue{
-background:#1d4ed8;
-color:white;
+.input-full{
+  width:100%;
+  padding:16px 14px;
+  font-size:1.05rem;
+  border:2px solid #444;
+  border-radius:16px;
+  outline:none;
+  background:#fff;
 }
 
 .btn-row{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-justify-content:center;
-margin-top:10px;
+  display:flex;
+  gap:12px;
+  margin-top:14px;
+  flex-wrap:wrap;
+  justify-content:center;
 }
 
-.place{
-font-size:28px;
-font-weight:900;
-text-align:center;
+button, .file-label{
+  border:none;
+  border-radius:16px;
+  padding:14px 18px;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  text-align:center;
+  display:inline-block;
 }
 
-.coords{
-text-align:center;
-color:#777;
+.btn-green{background:var(--green);color:white;}
+.btn-grey{background:#667085;color:white;}
+.btn-orange{background:var(--orange);color:white;}
+.btn-blue{background:var(--blue);color:white;}
+
+.subtext{
+  text-align:center;
+  color:var(--muted);
+  margin-top:10px;
+  font-size:1rem;
+  line-height:1.4;
 }
 
-.decision{
-text-align:center;
-font-weight:900;
-font-size:22px;
+.place-name{
+  font-size:2.3rem;
+  font-weight:900;
+  text-align:center;
+  margin:4px 0 6px;
+  line-height:1.05;
+  word-break:break-word;
 }
 
-.low{
-background:#eaf6ee;
+.coords, .updated{
+  text-align:center;
+  color:var(--muted);
+  font-size:1rem;
+  margin-top:4px;
 }
 
-.medium{
-background:#fff4e6;
+.grid-2, .grid-3, .grid-4{
+  display:grid;
+  gap:14px;
 }
 
-.high{
-background:#fdeceb;
+.grid-2{grid-template-columns:repeat(2,1fr);}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.grid-4{grid-template-columns:repeat(2,1fr);}
+
+.metric, .alert-card, .photo-card, .window-card, .trend-card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px 14px;
+  text-align:center;
+  background:#fff;
+}
+
+.metric-title{
+  font-size:1rem;
+  color:#222;
+  margin-bottom:6px;
+}
+
+.metric-value{
+  font-size:2rem;
+  font-weight:900;
+  line-height:1.05;
+}
+
+.metric-humidity{
+  color:var(--blue);
+}
+
+.big-decision{
+  text-align:center;
+  border:3px solid transparent;
+}
+
+.big-decision.low{
+  background:var(--green-soft);
+  border-color:var(--green);
+}
+
+.big-decision.medium{
+  background:var(--orange-soft);
+  border-color:var(--orange);
+}
+
+.big-decision.high{
+  background:var(--red-soft);
+  border-color:var(--red);
+}
+
+.big-status{
+  font-size:2rem;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.big-action{
+  font-size:1.2rem;
+  font-weight:800;
+  line-height:1.35;
+  margin-bottom:12px;
+}
+
+.reason{
+  color:var(--muted);
+  font-size:1rem;
+  line-height:1.35;
+}
+
+.window-time{
+  font-size:1.35rem;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.pill{
+  display:inline-block;
+  margin-top:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:.95rem;
+}
+
+.pill-low{background:var(--green-soft);color:var(--green);}
+.pill-medium{background:var(--orange-soft);color:#9a5a00;}
+.pill-high{background:var(--red-soft);color:var(--red);}
+
+.trend-day{
+  font-size:1.05rem;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.trend-icon{
+  font-size:2rem;
+  line-height:1;
+  margin-bottom:8px;
+}
+
+.trend-temp{
+  font-size:1.1rem;
+  font-weight:800;
+  margin-bottom:8px;
 }
 
 .photo-preview{
-width:100%;
-max-width:350px;
-margin:auto;
-display:block;
-border-radius:15px;
-margin-bottom:10px;
+  width:100%;
+  max-width:380px;
+  border-radius:18px;
+  display:block;
+  margin:0 auto 14px auto;
+  border:1px solid var(--border);
 }
 
 .photo-result{
-text-align:center;
-padding:14px;
-border-radius:12px;
-font-weight:700;
+  text-align:center;
+  border-radius:18px;
+  padding:16px;
+  font-weight:800;
+  line-height:1.45;
+  margin-top:10px;
 }
 
-.photo-ok{
-background:#eaf6ee;
-color:#2f6f3e;
+.photo-ok{background:var(--green-soft);color:var(--green);}
+.photo-warning{background:var(--orange-soft);color:#9a5a00;}
+.photo-danger{background:var(--red-soft);color:var(--red);}
+.photo-neutral{background:#f3f4f6;color:#374151;}
+
+.small-text{
+  color:var(--muted);
+  font-size:.92rem;
+  line-height:1.4;
+  text-align:center;
+  margin-top:8px;
 }
 
-.photo-warning{
-background:#fff4e6;
-color:#b45309;
+.loading, .error, .success{
+  text-align:center;
+  font-weight:700;
+  font-size:1.05rem;
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:14px;
 }
 
-.photo-danger{
-background:#fdeceb;
-color:#b91c1c;
+.loading{background:#eef2ff;color:#374151;}
+.error{background:#fdecec;color:#991b1b;}
+.success{background:#eaf6ee;color:#14532d;}
+
+.hidden{display:none;}
+
+canvas#riskChart{
+  width:100%;
+  background:white;
+  border-radius:14px;
+  margin-top:10px;
 }
 
-.footer{
-text-align:center;
-font-weight:700;
-color:#555;
+.footer-note{
+  color:var(--muted);
+  font-size:.95rem;
+  line-height:1.45;
+  text-align:center;
 }
 
-.hidden{
-display:none;
+.signature{
+  text-align:center;
+  font-size:1rem;
+  font-weight:800;
+  color:#374151;
+  margin-top:8px;
 }
 
+@media (max-width:760px){
+  .grid-3{grid-template-columns:1fr;}
+  .grid-2{grid-template-columns:1fr;}
+  .place-name{font-size:2rem;}
+  .big-status{font-size:1.8rem;}
+}
 </style>
 </head>
-
 <body>
 
-<div class="header">
-🍇 Alerte Vigne V7
-</div>
+<div class="header">🍇 Alerte Vigne V8</div>
 
 <div class="container">
-
-<div class="card">
-
-<h2>Localisation</h2>
-
-<input id="city" placeholder="Ex: Douzens" style="width:100%;padding:14px;border-radius:10px;border:2px solid #333;">
-
-<div class="btn-row">
-
-<button class="btn-green" onclick="searchCity()">Voir météo</button>
-
-<button class="btn-grey" onclick="gps()">GPS</button>
-
-<button class="btn-orange" onclick="refresh()">Actualiser</button>
-
-</div>
-
-</div>
-
-<div id="app" class="hidden">
-
-<div class="card">
-
-<div class="place" id="place"></div>
-
-<div class="coords" id="coords"></div>
-
-</div>
-
-<div class="card">
-
-<h2>Météo actuelle</h2>
-
-<div class="grid">
-
-<div class="metric">
-<div class="metric-title">Temps</div>
-<div class="metric-value" id="icon">☀️</div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Condition</div>
-<div class="metric-value" id="weather"></div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Température</div>
-<div class="metric-value" id="temp"></div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Humidité</div>
-<div class="metric-value humidity" id="hum"></div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Pluie</div>
-<div class="metric-value" id="rain"></div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Vent</div>
-<div class="metric-value" id="wind"></div>
-</div>
-
-</div>
-
-</div><div class="card" id="decisionCard">
-<h2>Décision</h2>
-<div class="decision" id="decisionText">---</div>
-<div style="text-align:center;margin-top:10px;font-weight:700;" id="bestWindow">---</div>
-<div style="text-align:center;color:#666;margin-top:8px;" id="reason">---</div>
-</div>
-
-<div class="card">
-
-<h2>Risques</h2>
-
-<div class="grid">
-
-<div class="metric">
-<div class="metric-title">Mildiou</div>
-<div class="metric-value" id="riskMildiou">--</div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Oïdium</div>
-<div class="metric-value" id="riskOidium">--</div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Black rot</div>
-<div class="metric-value" id="riskBlackrot">--</div>
-</div>
-
-<div class="metric">
-<div class="metric-title">Eudémis</div>
-<div class="metric-value" id="riskEudemis">--</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>Prévision 3 jours</h2>
   <div class="card">
-
-<h2>Risque 7 jours</h2>
-
-<canvas id="riskChart" height="140"></canvas>
-
-<div style="text-align:center;color:#666;margin-top:10px;">
-Évolution estimée du risque viticole sur 7 jours
-</div>
-
+    <h2>Localisation</h2>
+    <input id="cityInput" class="input-full" type="text" placeholder="Ex: Douzens, Narbonne, Béziers">
+    <div class="btn-row">
+      <button class="btn-green" id="searchBtn">Voir météo</button>
+      <button class="btn-grey" id="gpsBtn">GPS</button>
+      <button class="btn-orange" id="refreshBtn">Actualiser</button>
+    </div>
+    <div class="subtext">Météo quasi temps réel + analyse du risque vigne</div>
   </div>
 
-<div class="grid">
+  <div id="statusArea"></div>
 
-<div class="metric">
-<div class="metric-title" id="day1Label">Aujourd’hui</div>
-<div class="metric-value" id="day1Icon">☀️</div>
-<div style="font-weight:700;" id="day1Weather">---</div>
-<div id="day1Temp">--</div>
-</div>
+  <div id="app" class="hidden">
+    <div class="card big-decision" id="decisionCard">
+      <div class="big-status">Décision</div>
+      <div class="big-action" id="decisionText">---</div>
+      <div style="font-size:1.15rem;font-weight:800;margin-bottom:10px;" id="bestWindow">---</div>
+      <div class="reason" id="reasonText">---</div>
+    </div>
 
-<div class="metric">
-<div class="metric-title" id="day2Label">Demain</div>
-<div class="metric-value" id="day2Icon">☀️</div>
-<div style="font-weight:700;" id="day2Weather">---</div>
-<div id="day2Temp">--</div>
-</div>
+    <div class="card">
+      <div class="place-name" id="placeName">---</div>
+      <div class="coords" id="coordsText">---</div>
+      <div class="updated" id="updatedText">---</div>
+    </div>
 
-<div class="metric">
-<div class="metric-title" id="day3Label">J+2</div>
-<div class="metric-value" id="day3Icon">☀️</div>
-<div style="font-weight:700;" id="day3Weather">---</div>
-<div id="day3Temp">--</div>
-</div>
+    <div class="card">
+      <h2>Météo actuelle</h2>
+      <div class="grid-4">
+        <div class="metric">
+          <div class="metric-title">Temps</div>
+          <div class="metric-value" id="weatherIconNow" style="font-size:2.4rem;">☀️</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Condition</div>
+          <div class="metric-value" id="weatherTextNow" style="font-size:1.2rem;">---</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Température</div>
+          <div class="metric-value" id="tempNow">--°C</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Humidité</div>
+          <div class="metric-value metric-humidity" id="humNow">--%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Pluie</div>
+          <div class="metric-value" id="rainNow">-- mm</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Vent</div>
+          <div class="metric-value" id="windNow">-- km/h</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Feuille mouillée</div>
+          <div class="metric-value" id="leafWetNow">-- h</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Situation</div>
+          <div class="metric-value" id="situationNow" style="font-size:1.2rem;">---</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Risques</h2>
+      <div class="grid-2">
+        <div class="metric">
+          <div class="metric-title">Mildiou</div>
+          <div class="metric-value" id="riskMildiou">--</div>
+          <div id="riskMildiouLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Oïdium</div>
+          <div class="metric-value" id="riskOidium">--</div>
+          <div id="riskOidiumLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Black rot</div>
+          <div class="metric-value" id="riskBlackrot">--</div>
+          <div id="riskBlackrotLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Eudémis</div>
+          <div class="metric-value" id="riskEudemis">--</div>
+          <div id="riskEudemisLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+      </div>
+    </div>
 
-</div>
+    <div class="card">
+      <h2>Prévision 3 jours</h2>
+      <div class="grid-3">
+        <div class="trend-card">
+          <div class="trend-day">Aujourd’hui</div>
+          <div class="trend-icon" id="day1Icon">☀️</div>
+          <div style="font-weight:800;" id="day1Weather">---</div>
+          <div class="trend-temp" id="day1Temp">--</div>
+        </div>
+        <div class="trend-card">
+          <div class="trend-day">Demain</div>
+          <div class="trend-icon" id="day2Icon">☀️</div>
+          <div style="font-weight:800;" id="day2Weather">---</div>
+          <div class="trend-temp" id="day2Temp">--</div>
+        </div>
+        <div class="trend-card">
+          <div class="trend-day">J+2</div>
+          <div class="trend-icon" id="day3Icon">☀️</div>
+          <div style="font-weight:800;" id="day3Weather">---</div>
+          <div class="trend-temp" id="day3Temp">--</div>
+        </div>
+      </div>
+    </div>
 
-</div>
+    <div class="card">
+      <h2>Indices agronomiques</h2>
+      <div class="grid-2">
+        <div class="metric">
+          <div class="metric-title">Indice mildiou</div>
+          <div class="metric-value" id="indiceMildiou">--</div>
+          <div id="indiceMildiouLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Indice oïdium</div>
+          <div class="metric-value" id="indiceOidium">--</div>
+          <div id="indiceOidiumLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Pluie 7 jours</div>
+          <div class="metric-value" id="rain7days">--</div>
+          <div style="font-weight:700;margin-top:6px;">mm cumulés</div>
+        </div>
+        <div class="metric">
+          <div class="metric-title">Carte de risque</div>
+          <div class="metric-value" id="riskMap" style="font-size:20px;">---</div>
+          <div id="riskMapLabel" style="font-weight:700;margin-top:6px;">---</div>
+        </div>
+      </div>
+    </div>
 
-<div class="card">
-  <div class="card">
+    <div class="card">
+      <h2>Risque 7 jours</h2>
+      <canvas id="riskChart" height="180"></canvas>
+      <div class="small-text">Évolution estimée du risque viticole</div>
+    </div>
 
-<h2>Indices agronomiques</h2>
+    <div class="card">
+      <h2>Analyse IA de la feuille</h2>
 
-<div class="grid">
+      <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin-bottom:14px;">
+        <div style="text-align:center;color:#555;font-weight:700;margin-bottom:10px;">
+          Analyse IA de la feuille
+        </div>
 
-<div class="metric">
-<div class="metric-title">Indice mildiou</div>
-<div class="metric-value" id="indiceMildiou">--</div>
-<div id="indiceMildiouLabel" style="font-weight:700;margin-top:6px;">---</div>
-</div>
+        <input
+          id="openaiApiKey"
+          type="password"
+          class="input-full"
+          placeholder="Cole aqui a sua chave OpenAI"
+        >
 
-<div class="metric">
-<div class="metric-title">Indice oïdium</div>
-<div class="metric-value" id="indiceOidium">--</div>
-<div id="indiceOidiumLabel" style="font-weight:700;margin-top:6px;">---</div>
-</div>
+        <div class="btn-row">
+          <button class="btn-grey" type="button" id="saveApiKeyBtn">Guardar chave</button>
+          <button class="btn-orange" type="button" id="clearApiKeyBtn">Apagar chave</button>
+        </div>
 
-<div class="metric">
-<div class="metric-title">Pluie 7 jours</div>
-<div class="metric-value" id="rain7days">--</div>
-<div style="font-weight:700;margin-top:6px;">mm cumulés</div>
-</div>
+        <div id="apiKeyStatus" class="small-text">API: não configurada</div>
+      </div>
 
-<div class="metric">
-<div class="metric-title">Carte de risque</div>
-<div class="metric-value" id="riskMap" style="font-size:20px;">---</div>
-<div id="riskMapLabel" style="font-weight:700;margin-top:6px;">---</div>
-</div>
+      <div class="btn-row">
+        <label for="photoInput" class="file-label btn-blue">Prendre / choisir une photo</label>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden">
+      </div>
 
-</div>
+      <div class="small-text">
+        Sem chave API: análise local simples. Com chave: análise visual por IA.
+      </div>
 
+      <img id="photoPreview" class="photo-preview hidden" alt="Pré-visualisation">
+      <canvas id="photoCanvas" class="hidden"></canvas>
+      <div id="photoLoading" class="loading hidden">Analyse de la photo en cours...</div>
+      <div id="photoResult" class="photo-result hidden"></div>
+    </div>
+
+    <div class="card">
+      <h2>Alertes locales</h2>
+      <div class="btn-row">
+        <button class="btn-green" id="enableNotifBtn">Activer notifications</button>
+        <button class="btn-grey" id="testNotifBtn">Tester</button>
+      </div>
+
+      <div class="btn-row" style="margin-top:15px;">
+        <label style="font-weight:700;">
+          <input type="checkbox" id="alertsEnabled" checked>
+          Alertes actives
+        </label>
+
+        <label style="font-weight:700;">
+          <input type="checkbox" id="soundEnabled" checked>
+          Son
+        </label>
+      </div>
+
+      <div style="text-align:center;margin-top:10px;">
+        <select id="alertThreshold" style="padding:12px;border-radius:12px;border:1px solid #bbb;font-size:1rem;">
+          <option value="40">Alerter dès risque modéré</option>
+          <option value="70" selected>Alerter dès risque élevé</option>
+        </select>
+      </div>
+
+      <div class="small-text" id="notifStatus">Statut: inconnu</div>
+    </div>
+
+    <div class="card">
+      <div class="footer-note">Application créée par Filipe</div>
+      <div class="signature">© Filipe</div>
+    </div>
   </div>
-
-<h2>Photo de la vigne</h2>
-<div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin-bottom:14px;">
-
-<div style="text-align:center;color:#555;font-weight:700;margin-bottom:10px;">
-Analyse IA de la feuille
-</div>
-
-<input
-id="openaiApiKey"
-type="password"
-placeholder="Cole aqui a sua chave OpenAI"
-style="width:100%;padding:12px;border-radius:10px;border:2px solid #333;"
->
-
-<div class="btn-row">
-<button class="btn-grey" onclick="saveApiKey()">Guardar chave</button>
-<button class="btn-orange" onclick="clearApiKey()">Apagar chave</button>
-</div>
-
-<div id="apiKeyStatus" style="text-align:center;color:#666;margin-top:8px;">
-API: não configurada
-</div>
-
-</div>
-<div class="btn-row">
-<label for="photoInput" class="btn-blue" style="display:inline-block;">Prendre / choisir une photo</label>
-<input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden">
-</div>
-
-<p style="text-align:center;color:#666;">
-Analyse visuelle locale : mildiou, oïdium, black rot, carence magnésium ou feuille saine.
-</p>
-
-<img id="photoPreview" class="photo-preview hidden">
-
-<canvas id="photoCanvas" class="hidden"></canvas>
-
-<div id="photoResult" class="photo-result hidden"></div>
-
-</div>
-
-<div class="card">
-
-<h2>Alertes locales</h2>
-
-<div class="btn-row">
-<button class="btn-green" onclick="enableNotifications()">Activer notifications</button>
-<button class="btn-grey" onclick="testNotification()">Tester</button>
-</div>
-
-<div class="btn-row" style="margin-top:15px;">
-<label style="font-weight:700;">
-<input type="checkbox" id="alertsEnabled" checked>
-Alertes actives
-</label>
-
-<label style="font-weight:700;">
-<input type="checkbox" id="soundEnabled" checked>
-Son
-</label>
-</div>
-
-<div style="text-align:center;margin-top:10px;">
-<select id="alertThreshold" style="padding:10px;border-radius:10px;">
-<option value="30">Alerter dès risque moyen</option>
-<option value="60" selected>Alerter dès risque élevé</option>
-</select>
-</div>
-
-<p style="text-align:center;color:#666;" id="notifStatus">Statut: inconnu</p>
-
-</div>
-
-<div class="card">
-<div class="footer">
-Application créée par Filipe
-</div>
-</div>
-
 </div>
 
 <script>
+const cityInput = document.getElementById("cityInput");
+const searchBtn = document.getElementById("searchBtn");
+const gpsBtn = document.getElementById("gpsBtn");
+const refreshBtn = document.getElementById("refreshBtn");
+const app = document.getElementById("app");
+const statusArea = document.getElementById("statusArea");
 
-let state = {
-lat: null,
-lon: null,
-place: null,
-lastGlobalRisk: 0
-};
+const saveApiKeyBtn = document.getElementById("saveApiKeyBtn");
+const clearApiKeyBtn = document.getElementById("clearApiKeyBtn");
+const openaiApiKey = document.getElementById("openaiApiKey");
+const apiKeyStatus = document.getElementById("apiKeyStatus");
+
+const photoInput = document.getElementById("photoInput");
+const photoPreview = document.getElementById("photoPreview");
+const photoCanvas = document.getElementById("photoCanvas");
+const photoLoading = document.getElementById("photoLoading");
+const photoResult = document.getElementById("photoResult");
 
 const WEATHER_LABELS = {
-0:"Clair",
-1:"Peu nuageux",
-2:"Partiellement nuageux",
-3:"Couvert",
-45:"Brouillard",
-48:"Brouillard givrant",
-51:"Bruine légère",
-53:"Bruine modérée",
-55:"Bruine forte",
-61:"Pluie légère",
-63:"Pluie modérée",
-65:"Pluie forte",
-71:"Neige légère",
-73:"Neige modérée",
-75:"Neige forte",
-80:"Averses légères",
-81:"Averses modérées",
-82:"Averses fortes",
-95:"Orage",
-96:"Orage grêle légère",
-99:"Orage grêle forte"
+  0:"Clair",
+  1:"Peu nuageux",
+  2:"Partiellement nuageux",
+  3:"Couvert",
+  45:"Brouillard",
+  48:"Brouillard givrant",
+  51:"Bruine légère",
+  53:"Bruine modérée",
+  55:"Bruine forte",
+  61:"Pluie légère",
+  63:"Pluie modérée",
+  65:"Pluie forte",
+  71:"Neige légère",
+  73:"Neige modérée",
+  75:"Neige forte",
+  77:"Grains de neige",
+  80:"Averses légères",
+  81:"Averses modérées",
+  82:"Averses fortes",
+  95:"Orage",
+  96:"Orage grêle légère",
+  99:"Orage grêle forte"
 };
 
-function weatherIcon(code){
-if(code === 0) return "☀️";
-if([1,2].includes(code)) return "🌤️";
-if(code === 3) return "☁️";
-if([45,48].includes(code)) return "🌫️";
-if([51,53,55].includes(code)) return "🌦️";
-if([61,63,65,80,81,82].includes(code)) return "🌧️";
-if([71,73,75].includes(code)) return "❄️";
-if([95,96,99].includes(code)) return "⛈️";
-return "🌤️";
+const STORAGE_KEYS = {
+  city:"vigne_city",
+  lat:"vigne_lat",
+  lon:"vigne_lon",
+  place:"vigne_place",
+  alertsEnabled:"vigne_alerts_enabled",
+  soundEnabled:"vigne_sound_enabled",
+  threshold:"vigne_threshold",
+  lastAlert:"vigne_last_alert",
+  openaiKey:"vigne_openai_key"
+};
+
+let state = {
+  lat:null,
+  lon:null,
+  place:null,
+  lastGlobalRisk:0
+  function setStatus(type, text){
+  statusArea.innerHTML = `<div class="${type}">${text}</div>`;
+}
+
+function clearStatus(){
+  statusArea.innerHTML = "";
 }
 
 function clamp(v,min,max){
-return Math.max(min, Math.min(max, v));
+  return Math.max(min, Math.min(max,v));
+}
+
+function round1(n){
+  return Math.round(n*10)/10;
+}
+
+function weatherIcon(code){
+  if(code === 0) return "☀️";
+  if([1,2].includes(code)) return "🌤️";
+  if(code === 3) return "☁️";
+  if([45,48].includes(code)) return "🌫️";
+  if([51,53,55].includes(code)) return "🌦️";
+  if([61,63,65,80,81,82].includes(code)) return "🌧️";
+  if([71,73,75,77].includes(code)) return "❄️";
+  if([95,96,99].includes(code)) return "⛈️";
+  return "🌤️";
 }
 
 function level(score){
-if(score >= 60) return "Élevé";
-if(score >= 30) return "Moyen";
-return "Faible";
+  if(score >= 70) return "Élevé";
+  if(score >= 40) return "Moyen";
+  return "Faible";
 }
 
-function scoreMildiou(temp, hum, rain24, leafWet){
-let s = 0;
-if(rain24 >= 10) s += 35;
-else if(rain24 >= 5) s += 20;
-if(hum >= 85) s += 20;
-else if(hum >= 75) s += 10;
-if(temp >= 11 && temp <= 25) s += 20;
-else if(temp >= 9 && temp <= 28) s += 10;
-if(leafWet >= 10) s += 25;
-else if(leafWet >= 6) s += 12;
-return clamp(Math.round(s), 0, 100);
+function levelClass(score){
+  if(score >= 70) return "pill-high";
+  if(score >= 40) return "pill-medium";
+  return "pill-low";
 }
 
-function scoreOidium(temp, hum, rain24, hotDryDays){
-let s = 0;
-if(temp >= 18 && temp <= 30) s += 30;
-else if(temp >= 15 && temp <= 32) s += 15;
-if(hum >= 40 && hum <= 85) s += 20;
-else if(hum >= 30 && hum <= 90) s += 10;
-if(rain24 < 2) s += 10;
-if(hotDryDays >= 3) s += 40;
-else if(hotDryDays === 2) s += 20;
-return clamp(Math.round(s), 0, 100);
+function setDecisionStyle(globalRisk){
+  const card = document.getElementById("decisionCard");
+  card.classList.remove("low","medium","high");
+  if(globalRisk >= 70) card.classList.add("high");
+  else if(globalRisk >= 40) card.classList.add("medium");
+  else card.classList.add("low");
 }
 
-function scoreBlackrot(temp, hum, rain24){
-let s = 0;
-if(rain24 >= 5) s += 30;
-else if(rain24 >= 2) s += 15;
-if(hum >= 80) s += 30;
-else if(hum >= 70) s += 15;
-if(temp >= 15 && temp <= 30) s += 30;
-else if(temp >= 12 && temp <= 32) s += 15;
-return clamp(Math.round(s), 0, 100);
-}
-
-function scoreEudemis(temp, hum){
-let s = 0;
-if(temp >= 18 && temp <= 28) s += 40;
-else if(temp >= 15 && temp <= 31) s += 20;
-if(hum >= 50 && hum <= 75) s += 20;
-else if(hum >= 40 && hum <= 85) s += 10;
-return clamp(Math.round(s), 0, 100);
-}
-
-function scoreWindow(wind, rain, hum, temp){
-let s = 100;
-if(wind > 12) s -= 50;
-else if(wind > 8) s -= 25;
-if(rain > 0.2) s -= 60;
-if(hum > 95) s -= 15;
-if(temp < 8 || temp > 28) s -= 20;
-return clamp(Math.round(s), 0, 100);
+function setRiskBox(idValue, idLabel, score){
+  document.getElementById(idValue).textContent = score;
+  const label = level(score);
+  const labelEl = document.getElementById(idLabel);
+  labelEl.textContent = label;
+  labelEl.className = "pill " + levelClass(score);
 }
 
 function estimateLeafWetHours(hourlyHumidity, hourlyRain, hourlyTemp, startIdx, hours=24){
-let wet = 0;
-for(let i=startIdx; i<startIdx+hours && i<hourlyHumidity.length; i++){
-const h = hourlyHumidity[i] || 0;
-const r = hourlyRain[i] || 0;
-const t = hourlyTemp[i] || 0;
-if(r > 0.1 || h >= 90 || (h >= 85 && t >= 10 && t <= 24)) wet++;
-}
-return wet;
+  let wet = 0;
+  for(let i=startIdx; i<startIdx+hours && i<hourlyHumidity.length; i++){
+    const h = hourlyHumidity[i] || 0;
+    const r = hourlyRain[i] || 0;
+    const t = hourlyTemp[i] || 0;
+    if(r > 0.1 || h >= 90 || (h >= 85 && t >= 10 && t <= 24)) wet++;
+  }
+  return wet;
 }
 
 function countHotDryDays(dailyMax, dailyRain){
-let count = 0;
-for(let i=0;i<Math.min(3,dailyMax.length);i++){
-if(dailyMax[i] >= 24 && dailyRain[i] < 2) count++;
-}
-return count;
-} 
-  function setDecisionStyle(globalRisk){
-const card = document.getElementById("decisionCard");
-card.classList.remove("low","medium","high");
-if(globalRisk >= 60) card.classList.add("high");
-else if(globalRisk >= 30) card.classList.add("medium");
-else card.classList.add("low");
+  let count = 0;
+  for(let i=0;i<Math.min(3,dailyMax.length);i++){
+    if(dailyMax[i] >= 24 && dailyRain[i] < 2) count++;
+  }
+  return count;
 }
 
-function bestWindowText(hourly, startIdx){
-let best = null;
-for(let i=startIdx; i<Math.min(startIdx+24, hourly.time.length); i++){
-const s = scoreWindow(
-hourly.wind_speed_10m[i],
-hourly.precipitation[i],
-hourly.relative_humidity_2m[i],
-hourly.temperature_2m[i]
-);
-if(!best || s > best.score){
-best = {
-score: s,
-time: hourly.time[i],
-wind: hourly.wind_speed_10m[i],
-rain: hourly.precipitation[i]
-};
-}
-}
-if(!best) return "Pas de fenêtre trouvée";
-const hour = new Date(best.time).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-if(best.score >= 80) return `Meilleure fenêtre: ${hour} · Idéal`;
-if(best.score >= 55) return `Meilleure fenêtre: ${hour} · Acceptable`;
-return `Meilleure fenêtre: ${hour} · À éviter`;
+function scoreMildiou(temp, hum, rain24, leafWet){
+  let s = 0;
+  if(rain24 >= 10) s += 35;
+  else if(rain24 >= 5) s += 20;
+  if(hum >= 85) s += 20;
+  else if(hum >= 75) s += 10;
+  if(temp >= 11 && temp <= 25) s += 20;
+  else if(temp >= 9 && temp <= 28) s += 10;
+  if(leafWet >= 10) s += 25;
+  else if(leafWet >= 6) s += 12;
+  return clamp(Math.round(s),0,100);
 }
 
-function reasonText(mildiou, oidium, blackrot){
-if(mildiou >= oidium && mildiou >= blackrot && mildiou >= 30){
-return "Humidité, pluie récente et feuille mouillée favorisent le mildiou.";
-}
-if(oidium >= mildiou && oidium >= blackrot && oidium >= 30){
-return "Temps doux à chaud et sec favorise l’oïdium.";
-}
-if(blackrot >= 30){
-return "Humidité et pluie récentes augmentent le black rot.";
-}
-return "Situation globalement calme.";
-}
-
-async function geocodeCity(city){
-const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=fr&format=json`;
-const res = await fetch(url);
-const data = await res.json();
-if(!data.results || !data.results.length) throw new Error("Ville introuvable");
-return data.results[0];
+function scoreOidium(temp, hum, rain24, hotDryDays){
+  let s = 0;
+  if(temp >= 18 && temp <= 30) s += 30;
+  else if(temp >= 15 && temp <= 32) s += 15;
+  if(hum >= 40 && hum <= 85) s += 20;
+  else if(hum >= 30 && hum <= 90) s += 10;
+  if(rain24 < 2) s += 10;
+  if(hotDryDays >= 3) s += 40;
+  else if(hotDryDays === 2) s += 20;
+  return clamp(Math.round(s),0,100);
 }
 
-async function fetchWeather(lat, lon){
-const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=7&timezone=auto`;
-const res = await fetch(url, {cache:"no-store"});
-if(!res.ok) throw new Error("Erreur météo");
-return await res.json();
+function scoreBlackrot(temp, hum, rain24){
+  let s = 0;
+  if(rain24 >= 5) s += 30;
+  else if(rain24 >= 2) s += 15;
+  if(hum >= 80) s += 30;
+  else if(hum >= 70) s += 15;
+  if(temp >= 15 && temp <= 30) s += 30;
+  else if(temp >= 12 && temp <= 32) s += 15;
+  return clamp(Math.round(s),0,100);
 }
 
-async function loadData(lat, lon, placeLabel){
-const data = await fetchWeather(lat, lon);
+function scoreEudemis(temp, hum){
+  let s = 0;
+  if(temp >= 18 && temp <= 28) s += 40;
+  else if(temp >= 15 && temp <= 31) s += 20;
+  if(hum >= 50 && hum <= 75) s += 20;
+  else if(hum >= 40 && hum <= 85) s += 10;
+  return clamp(Math.round(s),0,100);
+}
 
-document.getElementById("app").classList.remove("hidden");
+function scoreWindow(wind, rain, hum, temp){
+  let s = 100;
+  if(wind > 12) s -= 50;
+  else if(wind > 8) s -= 25;
+  if(rain > 0.2) s -= 60;
+  if(hum > 95) s -= 15;
+  if(temp < 8 || temp > 28) s -= 20;
+  return clamp(Math.round(s),0,100);
+}
 
-document.getElementById("place").textContent = placeLabel;
-document.getElementById("coords").textContent = `Lat ${lat.toFixed(5)} | Lon ${lon.toFixed(5)}`;
+function bestWindowInfo(hourly, startIdx){
+  let best = null;
+  for(let i=startIdx; i<Math.min(startIdx+24, hourly.time.length); i++){
+    const score = scoreWindow(
+      hourly.wind_speed_10m[i],
+      hourly.precipitation[i],
+      hourly.relative_humidity_2m[i],
+      hourly.temperature_2m[i]
+    );
+    if(!best || score > best.score){
+      best = {
+        score,
+        time: hourly.time[i]
+      };
+    }
+  }
+  if(!best) return "Meilleure fenêtre: indisponible";
+  const hour = new Date(best.time).toLocaleTimeString("fr-FR",{hour:"2-digit", minute:"2-digit"});
+  const txt = best.score >= 80 ? "Idéal" : best.score >= 55 ? "Acceptable" : "À éviter";
+  return `Meilleure fenêtre: ${hour} · ${txt}`;
+}
 
-document.getElementById("icon").textContent = weatherIcon(data.current.weather_code);
-document.getElementById("weather").textContent = WEATHER_LABELS[data.current.weather_code] || "Météo";
-document.getElementById("temp").textContent = `${data.current.temperature_2m.toFixed(1)}°C`;
-document.getElementById("hum").textContent = `${Math.round(data.current.relative_humidity_2m)}%`;
-document.getElementById("rain").textContent = `${data.current.precipitation.toFixed(1)} mm`;
-document.getElementById("wind").textContent = `${data.current.wind_speed_10m.toFixed(1)} km/h`;
-
-const nowHour = new Date();
-nowHour.setMinutes(0,0,0);
-const isoHour = nowHour.toISOString().slice(0,13) + ":00";
-let startIdx = data.hourly.time.findIndex(t => t.slice(0,13)+":00" === isoHour);
-if(startIdx < 0) startIdx = 0;
-
-const leafWet = estimateLeafWetHours(
-data.hourly.relative_humidity_2m,
-data.hourly.precipitation,
-data.hourly.temperature_2m,
-startIdx,
-24
-);
-
-const tempSlice = data.hourly.temperature_2m.slice(startIdx, startIdx+24);
-const humSlice = data.hourly.relative_humidity_2m.slice(startIdx, startIdx+24);
-const rainSlice = data.hourly.precipitation.slice(startIdx, startIdx+24);
-
-const avgTemp = tempSlice.reduce((a,b)=>a+b,0) / tempSlice.length;
-const avgHum = humSlice.reduce((a,b)=>a+b,0) / humSlice.length;
-const rain24 = rainSlice.reduce((a,b)=>a+b,0);
-const hotDryDays = countHotDryDays(data.daily.temperature_2m_max, data.daily.precipitation_sum);
-
-const mildiou = scoreMildiou(avgTemp, avgHum, rain24, leafWet);
-const oidium = scoreOidium(avgTemp, avgHum, rain24, hotDryDays);
-  function indiceMildiouGoidanich(temp, hum, rain24, rain7, leafWet){
-let score = 0;
-
-// chuva recente e acumulada
-if(rain24 >= 10) score += 25;
-else if(rain24 >= 5) score += 15;
-
-if(rain7 >= 20) score += 20;
-else if(rain7 >= 10) score += 10;
-
-// humidade
-if(hum >= 85) score += 20;
-else if(hum >= 75) score += 10;
-
-// temperatura favorável
-if(temp >= 11 && temp <= 24) score += 20;
-else if(temp >= 9 && temp <= 27) score += 10;
-
-// folha molhada
-if(leafWet >= 10) score += 25;
-else if(leafWet >= 6) score += 12;
-
-return clamp(Math.round(score), 0, 100);
+function indiceMildiouGoidanich(temp, hum, rain24, rain7, leafWet){
+  let score = 0;
+  if(rain24 >= 10) score += 25;
+  else if(rain24 >= 5) score += 15;
+  if(rain7 >= 20) score += 20;
+  else if(rain7 >= 10) score += 10;
+  if(hum >= 85) score += 20;
+  else if(hum >= 75) score += 10;
+  if(temp >= 11 && temp <= 24) score += 20;
+  else if(temp >= 9 && temp <= 27) score += 10;
+  if(leafWet >= 10) score += 25;
+  else if(leafWet >= 6) score += 12;
+  return clamp(Math.round(score),0,100);
 }
 
 function indiceOidiumViticole(temp, hum, rain24, hotDryDays){
-let score = 0;
-
-// temperatura
-if(temp >= 20 && temp <= 28) score += 30;
-else if(temp >= 16 && temp <= 31) score += 15;
-
-// humidade intermédia favorece
-if(hum >= 40 && hum <= 80) score += 25;
-else if(hum >= 30 && hum <= 90) score += 10;
-
-// pouca chuva favorece oidium
-if(rain24 < 2) score += 15;
-
-// sequência quente e seca
-if(hotDryDays >= 3) score += 30;
-else if(hotDryDays === 2) score += 15;
-
-return clamp(Math.round(score), 0, 100);
+  let score = 0;
+  if(temp >= 20 && temp <= 28) score += 30;
+  else if(temp >= 16 && temp <= 31) score += 15;
+  if(hum >= 40 && hum <= 80) score += 25;
+  else if(hum >= 30 && hum <= 90) score += 10;
+  if(rain24 < 2) score += 15;
+  if(hotDryDays >= 3) score += 30;
+  else if(hotDryDays === 2) score += 15;
+  return clamp(Math.round(score),0,100);
 }
 
 function labelIndice(score){
-if(score >= 70) return "Fort";
-if(score >= 40) return "Modéré";
-return "Faible";
+  if(score >= 70) return "Fort";
+  if(score >= 40) return "Modéré";
+  return "Faible";
 }
 
 function couleurCarte(globalRisk){
-if(globalRisk >= 70){
-return {emoji:"🔴", label:"Risque élevé"};
-}
-if(globalRisk >= 40){
-return {emoji:"🟠", label:"Risque modéré"};
-}
-return {emoji:"🟢", label:"Risque faible"};
+  if(globalRisk >= 70) return {emoji:"🔴", label:"Risque élevé"};
+  if(globalRisk >= 40) return {emoji:"🟠", label:"Risque modéré"};
+  return {emoji:"🟢", label:"Risque faible"};
 }
 
 function pluie7Jours(dailyRain){
-return dailyRain.slice(0, 7).reduce((a,b) => a + b, 0);
-}
-const blackrot = scoreBlackrot(avgTemp, avgHum, rain24);
-const eudemis = scoreEudemis(avgTemp, avgHum);
-const globalRisk = Math.max(mildiou, oidium, blackrot, eudemis);
-
-document.getElementById("riskMildiou").textContent = level(mildiou);
-document.getElementById("riskOidium").textContent = level(oidium);
-document.getElementById("riskBlackrot").textContent = level(blackrot);
-document.getElementById("riskEudemis").textContent = level(eudemis);
-
-let decision = "Situation calme. Aucun traitement urgent.";
-if(globalRisk >= 60) decision = "Risque élevé. Traiter dans la meilleure fenêtre.";
-else if(globalRisk >= 30) decision = "Vigilance recommandée. Préparer une intervention.";
-
-document.getElementById("decisionText").textContent = decision;
-document.getElementById("bestWindow").textContent = bestWindowText(data.hourly, startIdx);
-document.getElementById("reason").textContent = reasonText(mildiou, oidium, blackrot);
-
-setDecisionStyle(globalRisk);
-
-document.getElementById("day1Icon").textContent = weatherIcon(data.daily.weather_code[0]);
-document.getElementById("day2Icon").textContent = weatherIcon(data.daily.weather_code[1]);
-document.getElementById("day3Icon").textContent = weatherIcon(data.daily.weather_code[2]);
-
-document.getElementById("day1Weather").textContent = WEATHER_LABELS[data.daily.weather_code[0]] || "---";
-document.getElementById("day2Weather").textContent = WEATHER_LABELS[data.daily.weather_code[1]] || "---";
-document.getElementById("day3Weather").textContent = WEATHER_LABELS[data.daily.weather_code[2]] || "---";
-
-document.getElementById("day1Temp").textContent = `${data.daily.temperature_2m_min[0].toFixed(1)}° / ${data.daily.temperature_2m_max[0].toFixed(1)}°`;
-document.getElementById("day2Temp").textContent = `${data.daily.temperature_2m_min[1].toFixed(1)}° / ${data.daily.temperature_2m_max[1].toFixed(1)}°`;
-document.getElementById("day3Temp").textContent = `${data.daily.temperature_2m_min[2].toFixed(1)}° / ${data.daily.temperature_2m_max[2].toFixed(1)}°`;
-
-state.lat = lat;document.getElementById("indiceMildiou").textContent = agriMildiou;
-document.getElementById("indiceMildiouLabel").textContent = labelIndice(agriMildiou);
-
-document.getElementById("indiceOidium").textContent = agriOidium;
-document.getElementById("indiceOidiumLabel").textContent = labelIndice(agriOidium);
-
-document.getElementById("rain7days").textContent = rain7.toFixed(1);
-
-const mapRisk = couleurCarte(globalRisk);
-document.getElementById("riskMap").textContent = mapRisk.emoji;
-document.getElementById("riskMapLabel").textContent = mapRisk.label;
-state.lon = lon;
-state.place = placeLabel;
-state.lastGlobalRisk = globalRisk;
-
-localStorage.setItem("vigne_lat", lat);
-localStorage.setItem("vigne_lon", lon);
-localStorage.setItem("vigne_place", placeLabel);
-
-maybeAlert(globalRisk, decision);
+  return dailyRain.slice(0,7).reduce((a,b)=>a+b,0);
 }
 
-async function searchCity(){
-try{
-const city = document.getElementById("city").value.trim();
-if(!city) return alert("Entre une ville");
-const loc = await geocodeCity(city);
-const label = [loc.name, loc.admin1, loc.country].filter(Boolean).join(", ");
-localStorage.setItem("vigne_city", city);
-await loadData(loc.latitude, loc.longitude, label);
-}catch(e){
-alert("Erreur: " + e.message);
+function reasonText(agriMildiou, agriOidium, blackrot, rain7){
+  if(agriMildiou >= agriOidium && agriMildiou >= 40){
+    return `Humidité, pluie récente, pluie 7 jours (${rain7.toFixed(1)} mm) et feuille mouillée favorisent le mildiou.`;
+  }
+  if(agriOidium >= agriMildiou && agriOidium >= 40){
+    return "Temps doux à chaud et sec favorise l’oïdium.";
+  }
+  if(blackrot >= 40){
+    return "Humidité et pluie récentes augmentent le black rot.";
+  }
+  return "Situation globalement calme.";
 }
-}
-
-function gps(){
-if(!navigator.geolocation){
-alert("GPS non supporté");
-return;
-}
-navigator.geolocation.getCurrentPosition(async pos => {
-const lat = pos.coords.latitude;
-const lon = pos.coords.longitude;
-localStorage.removeItem("vigne_city");
-await loadData(lat, lon, "Ma position actuelle");
-}, err => {
-alert("GPS impossible");
-}, {enableHighAccuracy:true, timeout:10000});
-}
-
-async function refresh(){
-if(state.lat != null && state.lon != null){
-await loadData(state.lat, state.lon, state.place || "Ma position actuelle");
-return;
-}
-const lat = localStorage.getItem("vigne_lat");
-const lon = localStorage.getItem("vigne_lon");
-const place = localStorage.getItem("vigne_place");
-if(lat && lon){
-await loadData(Number(lat), Number(lon), place || "Ma position actuelle");
-}
-}
-
-async function enableNotifications(){
-if(!("Notification" in window)){
-alert("Notifications non supportées");
-return;
-}
-const permission = await Notification.requestPermission();
-document.getElementById("notifStatus").textContent = "Statut: " + permission;
-}
-
-function testNotification(){
-if(!("Notification" in window)) return;
-if(Notification.permission !== "granted"){
-alert("Active d’abord les notifications");
-return;
-}
-new Notification("Alerte Vigne", {
-body:"Test notification réussi."
-});
-playBeep();
-}
-
-function playBeep(){
-if(!document.getElementById("soundEnabled").checked) return;
-try{
-const ctx = new (window.AudioContext || window.webkitAudioContext)();
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.frequency.value = 880;
-gain.gain.value = 0.06;
-osc.start();
-osc.stop(ctx.currentTime + 0.25);
-}catch(e){}
-}
-
-function maybeAlert(globalRisk, decision){
-if(!document.getElementById("alertsEnabled").checked) return;
-if(!("Notification" in window)) return;
-if(Notification.permission !== "granted") return;
-
-const threshold = Number(document.getElementById("alertThreshold").value || 60);
-if(globalRisk < threshold) return;
-
-const last = localStorage.getItem("vigne_last_alert");
-const key = `${state.place}|${globalRisk >= 60 ? "high" : "medium"}|${new Date().toISOString().slice(0,13)}`;
-if(last === key) return;
-
-new Notification("Alerte Vigne", {
-body:`${state.place}: ${decision}`
-});
-
-playBeep();
-localStorage.setItem("vigne_last_alert", key);
-}
-
-function renderPhotoResult(type, text, detail){
-const box = document.getElementById("photoResult");
-box.classList.remove("hidden","photo-ok","photo-warning","photo-danger");
-
-if(type === "ok") box.classList.add("photo-ok");
-else if(type === "warning") box.classList.add("photo-warning");
-else box.classList.add("photo-danger");
-
-box.innerHTML = `<div>${text}</div><div style="margin-top:8px;font-weight:600;">${detail}</div>`;
-}
-
-function analyzeLeafImage(img){
-const canvas = document.getElementById("photoCanvas");
-const ctx = canvas.getContext("2d");
-
-const maxW = 260;
-const scale = Math.min(1, maxW / img.width);
-canvas.width = Math.floor(img.width * scale);
-canvas.height = Math.floor(img.height * scale);
-
-ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-
-let green = 0;
-let yellow = 0;
-let brown = 0;
-let white = 0;
-let black = 0;
-let total = 0;
-
-for(let i=0;i<data.length;i+=4){
-const r = data[i];
-const g = data[i+1];
-const b = data[i+2];
-
-total++;
-
-if(g > r + 15 && g > b + 10 && g > 60) green++;
-if(r > 130 && g > 130 && b < 120) yellow++;
-if(r > 70 && r < 170 && g > 40 && g < 130 && b < 90) brown++;
-if(r > 180 && g > 180 && b > 180) white++;
-if(r < 70 && g < 70 && b < 70) black++;
-}
-
-const greenRatio = green / total;
-const yellowRatio = yellow / total;
-const brownRatio = brown / total;
-const whiteRatio = white / total;
-const blackRatio = black / total;
-
-if(greenRatio < 0.18){
-renderPhotoResult(
-"warning",
-"Photo peu exploitable.",
-"Cadre trop large, fond trop présent ou feuille mal visible."
-);
-return;
-}
-
-if(whiteRatio > 0.16 && greenRatio > 0.20){
-renderPhotoResult(
-"danger",
-"Suspicion d’oïdium.",
-"Présence importante de zones claires/blanchâtres sur la feuille."
-);
-return;
-}
-
-if(yellowRatio > 0.16 && brownRatio > 0.07){
-renderPhotoResult(
-"danger",
-"Suspicion de mildiou.",
-"Jaunissement marqué avec zones nécrosées ou irrégulières."
-);
-return;
-}
-
-if(brownRatio > 0.12 && blackRatio > 0.06){
-renderPhotoResult(
-"danger",
-"Suspicion de black rot.",
-"Présence notable de taches sombres/brunes."
-);
-return;
-}
-
-if(yellowRatio > 0.18 && brownRatio < 0.05 && whiteRatio < 0.08){
-renderPhotoResult(
-"warning",
-"Suspicion de carence en magnésium.",
-"Jaunissement dominant sans forte nécrose."
-);
-return;
-}
-
-if(yellowRatio > 0.10 || brownRatio > 0.06 || blackRatio > 0.08 || whiteRatio > 0.10){
-renderPhotoResult(
-"warning",
-"Anomalie visuelle détectée.",
-"Feuille possiblement stressée ou début de maladie. Vérification conseillée."
-);
-return;
-}
-
-renderPhotoResult(
-"ok",
-"Feuille probablement saine.",
-"Dominance de vert avec peu d’anomalies visibles."
-);
-}
-
-document.getElementById("photoInput").addEventListener("change", e => {
-const file = e.target.files[0];
-if(!file) return;
-
-const reader = new FileReader();
-reader.onload = () => {
-const preview = document.getElementById("photoPreview");
-preview.src = reader.result;
-preview.classList.remove("hidden");
-
-const img = new Image();
-img.onload = () => analyzeLeafImage(img);
-img.src = reader.result;
 };
-reader.readAsDataURL(file);
-});
-
-setInterval(() => {
-refresh();
-}, 10 * 60 * 1000);
-
-window.addEventListener("load", async () => {
-document.getElementById("notifStatus").textContent =
-("Notification" in window) ? "Statut: " + Notification.permission : "Statut: non supporté";
-
-const alertsEnabled = localStorage.getItem("vigne_alerts_enabled");
-const soundEnabled = localStorage.getItem("vigne_sound_enabled");
-const threshold = localStorage.getItem("vigne_threshold");
-
-if(alertsEnabled !== null) document.getElementById("alertsEnabled").checked = alertsEnabled === "1";
-if(soundEnabled !== null) document.getElementById("soundEnabled").checked = soundEnabled === "1";
-if(threshold) document.getElementById("alertThreshold").value = threshold;
-
-document.getElementById("alertsEnabled").addEventListener("change", () => {
-localStorage.setItem("vigne_alerts_enabled", document.getElementById("alertsEnabled").checked ? "1" : "0");
-});
-
-document.getElementById("soundEnabled").addEventListener("change", () => {
-localStorage.setItem("vigne_sound_enabled", document.getElementById("soundEnabled").checked ? "1" : "0");
-});
-
-document.getElementById("alertThreshold").addEventListener("change", () => {
-localStorage.setItem("vigne_threshold", document.getElementById("alertThreshold").value);
-});
-
-const savedCity = localStorage.getItem("vigne_city");
-const savedLat = localStorage.getItem("vigne_lat");
-const savedLon = localStorage.getItem("vigne_lon");
-const savedPlace = localStorage.getItem("vigne_place");
-
-if(savedCity){
-document.getElementById("city").value = savedCity;
-await searchCity();
-return;
-}
-
-if(savedLat && savedLon){
-await loadData(Number(savedLat), Number(savedLon), savedPlace || "Ma position actuelle");
-return;
-}
-
-document.getElementById("city").value = "Douzens";
-});
-
-</script>
-</body>
-</html>
-function computeRiskForDay(data, dayIndex){
+  function computeRiskForDay(data, dayIndex){
   const startIdx = dayIndex * 24;
 
   const tempSlice = data.hourly.temperature_2m.slice(startIdx, startIdx+24);
