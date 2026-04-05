@@ -777,7 +777,17 @@ document.getElementById("day1Temp").textContent = `${data.daily.temperature_2m_m
 document.getElementById("day2Temp").textContent = `${data.daily.temperature_2m_min[1].toFixed(1)}° / ${data.daily.temperature_2m_max[1].toFixed(1)}°`;
 document.getElementById("day3Temp").textContent = `${data.daily.temperature_2m_min[2].toFixed(1)}° / ${data.daily.temperature_2m_max[2].toFixed(1)}°`;
 
-state.lat = lat;
+state.lat = lat;document.getElementById("indiceMildiou").textContent = agriMildiou;
+document.getElementById("indiceMildiouLabel").textContent = labelIndice(agriMildiou);
+
+document.getElementById("indiceOidium").textContent = agriOidium;
+document.getElementById("indiceOidiumLabel").textContent = labelIndice(agriOidium);
+
+document.getElementById("rain7days").textContent = rain7.toFixed(1);
+
+const mapRisk = couleurCarte(globalRisk);
+document.getElementById("riskMap").textContent = mapRisk.emoji;
+document.getElementById("riskMapLabel").textContent = mapRisk.label;
 state.lon = lon;
 state.place = placeLabel;
 state.lastGlobalRisk = globalRisk;
