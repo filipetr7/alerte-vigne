@@ -1473,5 +1473,44 @@ window.addEventListener("load", async () => {
   cityInput.value = "Douzens";
 });
 </script>
-</body>
+<script>
+document.getElementById("searchBtn").onclick = async function () {
+  try {
+    const city = document.getElementById("cityInput").value.trim() || "Douzens";
+
+    const geo = await fetch(
+      "https://geocoding-api.open-meteo.com/v1/search?name=" +
+      encodeURIComponent(city) +
+      "&count=1&language=fr&format=json"
+    );
+    const geoData = await geo.json();
+
+    if (!geoData.results || !geoData.results.length) {
+      alert("Ville introuvable");
+      return;
+    }
+
+    const loc = geoData.results[0];
+
+    const meteo = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=" +
+      loc.latitude +
+      "&longitude=" +
+      loc.longitude +
+      "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&timezone=auto"
+    );
+
+    const meteoData = await meteo.json();
+
+    alert(
+      "OK\\n" +
+      loc.name + "\\n" +
+      "Temp: " + meteoData.current.temperature_2m + "°C\\n" +
+      "Humidité: " + meteoData.current.relative_humidity_2m + "%"
+    );
+  } catch (e) {
+    alert("Erreur JS: " + e.message);
+  }
+};
+</script> </body>
 </html>
