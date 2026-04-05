@@ -323,7 +323,29 @@ display:none;
 <div class="card">
 
 <h2>Photo de la vigne</h2>
+<div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin-bottom:14px;">
 
+<div style="text-align:center;color:#555;font-weight:700;margin-bottom:10px;">
+Analyse IA de la feuille
+</div>
+
+<input
+id="openaiApiKey"
+type="password"
+placeholder="Cole aqui a sua chave OpenAI"
+style="width:100%;padding:12px;border-radius:10px;border:2px solid #333;"
+>
+
+<div class="btn-row">
+<button class="btn-grey" onclick="saveApiKey()">Guardar chave</button>
+<button class="btn-orange" onclick="clearApiKey()">Apagar chave</button>
+</div>
+
+<div id="apiKeyStatus" style="text-align:center;color:#666;margin-top:8px;">
+API: não configurada
+</div>
+
+</div>
 <div class="btn-row">
 <label for="photoInput" class="btn-blue" style="display:inline-block;">Prendre / choisir une photo</label>
 <input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden">
