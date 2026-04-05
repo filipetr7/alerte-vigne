@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Alerte Vigne</title>
 
 <style>
@@ -26,15 +28,15 @@ text-align:center;
 .container{
 max-width:1000px;
 margin:auto;
-padding:15px;
+padding:14px;
 }
 
 .card{
 background:white;
-margin:15px 0;
+margin:16px 0;
 padding:20px;
 border-radius:14px;
-box-shadow:0 3px 8px rgba(0,0,0,0.1);
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
 h2{
@@ -48,8 +50,7 @@ padding:14px;
 font-size:18px;
 border-radius:10px;
 border:2px solid #333;
-margin-bottom:12px;
-box-sizing:border-box;
+margin-bottom:10px;
 }
 
 button{
@@ -71,28 +72,15 @@ gap:10px;
 .gray{background:#596275}
 
 .big{
-font-size:32px;
-text-align:center;
+font-size:30px;
 font-weight:bold;
-margin:10px 0;
+text-align:center;
 }
 
 .small{
 text-align:center;
 color:#6b7280;
 }
-
-.banner{
-padding:18px;
-border-radius:14px;
-text-align:center;
-font-size:20px;
-font-weight:bold;
-}
-
-.good{background:#e7f9ed;color:#166534}
-.warn{background:#fff4e5;color:#b45309}
-.bad{background:#fde8e8;color:#b91c1c}
 
 .mini-grid{
 display:grid;
@@ -101,16 +89,11 @@ gap:10px;
 }
 
 .mini{
-background:#f9fafb;
-border-radius:12px;
-padding:15px;
+background:#f8fafc;
+border-radius:10px;
+padding:14px;
 text-align:center;
 border:1px solid #e5e7eb;
-}
-
-.mini-title{
-font-size:14px;
-color:#6b7280;
 }
 
 .mini-value{
@@ -126,14 +109,10 @@ gap:10px;
 
 .risk{
 padding:14px;
-border-radius:12px;
+border-radius:10px;
 text-align:center;
 border:1px solid #e5e7eb;
 }
-
-.risk-low{background:#e7f9ed;color:#166534}
-.risk-mid{background:#fff4e5;color:#b45309}
-.risk-high{background:#fde8e8;color:#b91c1c}
 
 .hours-grid{
 display:grid;
@@ -142,55 +121,50 @@ gap:10px;
 }
 
 .hour{
-border-radius:10px;
+background:#fafafa;
 padding:12px;
-background:#fafafa;
+border-radius:10px;
 border:1px solid #e5e7eb;
 text-align:center;
 }
 
-.week-calendar{
+.chart-row{
 display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:6px;
-margin-bottom:16px;
-}
-
-.week-day{
-background:#f9fafb;
-border-radius:10px;
-border:1px solid #e5e7eb;
-padding:8px;
-text-align:center;
-font-size:14px;
-}
-
-.week-list{
-display:grid;
-gap:8px;
-}
-
-.week-line{
-background:#fafafa;
-border-radius:10px;
-border:1px solid #e5e7eb;
-padding:10px;
-display:grid;
-grid-template-columns:110px 150px 1fr;
-gap:8px;
+grid-template-columns:110px 1fr 70px;
+gap:10px;
 align-items:center;
+margin-bottom:8px;
 }
 
-.tag-green{color:#166534;font-weight:bold}
-.tag-orange{color:#b45309;font-weight:bold}
-.tag-red{color:#b91c1c;font-weight:bold}
+.chart-track{
+height:16px;
+background:#e5e7eb;
+border-radius:999px;
+overflow:hidden;
+}
+
+.chart-fill{
+height:100%;
+}
+
+.fill-green{background:#16a34a}
+.fill-orange{background:#ea580c}
+.fill-red{background:#dc2626}
+
+.best-window{
+background:#f8fafc;
+padding:16px;
+border-radius:10px;
+border:1px solid #e5e7eb;
+text-align:center;
+}
 
 @media(max-width:800px){
+
 .mini-grid{grid-template-columns:repeat(2,1fr)}
 .risk-grid{grid-template-columns:repeat(2,1fr)}
 .hours-grid{grid-template-columns:repeat(2,1fr)}
-.week-calendar{grid-template-columns:repeat(4,1fr)}
-.week-line{grid-template-columns:1fr;text-align:center}
+
 }
 
 </style>
@@ -204,61 +178,67 @@ align-items:center;
 <div class="container">
 
 <div class="card">
+
 <h2>Localisation</h2>
 
-<input id="ville" placeholder="Nom de la ville ou village">
+<input id="ville" placeholder="Nom de la ville">
 
 <div class="btn-row">
 <button class="green" onclick="getWeather()">Voir météo</button>
-<button class="gray" onclick="gps()">Utiliser GPS</button>
+<button class="gray" onclick="gps()">GPS</button>
 </div>
 
-<div class="small" id="statusText">Entrez un lieu</div>
+<div class="small" id="statusText">Entrer une ville</div>
+
 </div>
+
 
 
 <div class="card">
-<div id="topAlert" class="banner warn">Aucune alerte</div>
-</div>
 
+<h2>Lieu</h2>
 
-<div class="card">
-<h2>Lieu sélectionné</h2>
 <div class="big" id="placeName">---</div>
 <div class="small" id="coords">---</div>
+
 </div>
 
 
+
 <div class="card">
+
 <h2>Météo actuelle</h2>
 
 <div class="mini-grid">
 
 <div class="mini">
-<div class="mini-title">Température</div>
+Température
 <div class="mini-value" id="tempNow">--</div>
 </div>
 
 <div class="mini">
-<div class="mini-title">Humidité</div>
+Humidité
 <div class="mini-value" id="humidityNow">--</div>
 </div>
 
 <div class="mini">
-<div class="mini-title">Pluie</div>
+Pluie
 <div class="mini-value" id="rainNow">--</div>
 </div>
 
 <div class="mini">
-<div class="mini-title">Vent</div>
+Vent
 <div class="mini-value" id="windNow">--</div>
 </div>
 
 </div>
+
 </div>
 
 
+
 <div class="card">
+
 <h2>Décision</h2>
 
 <div class="big" id="decisionMain">---</div>
@@ -270,27 +250,27 @@ align-items:center;
 
 <div class="card">
 
-<h2>Risques maladies</h2>
+<h2>Risques</h2>
 
 <div class="risk-grid">
 
-<div class="risk" id="mildiouBox">
-<strong>Mildiou</strong>
+<div class="risk">
+Mildiou
 <div id="mildiouValue">---</div>
 </div>
 
-<div class="risk" id="oidiumBox">
-<strong>Oïdium</strong>
+<div class="risk">
+Oïdium
 <div id="oidiumValue">---</div>
 </div>
 
-<div class="risk" id="blackrotBox">
-<strong>Black rot</strong>
+<div class="risk">
+Black rot
 <div id="blackrotValue">---</div>
 </div>
 
-<div class="risk" id="eudemisBox">
-<strong>Eudémis</strong>
+<div class="risk">
+Eudémis
 <div id="eudemisValue">---</div>
 </div>
 
@@ -299,34 +279,41 @@ align-items:center;
 </div>
 
 
+
 <div class="card">
 
-<h2>Heures idéales</h2>
+<h2>Heures traitement</h2>
 
 <div class="hours-grid" id="hoursGrid"></div>
 
 </div>
 
 
+
 <div class="card">
 
-<h2>Plan semaine</h2>
+<h2>Risque mildiou 7 jours</h2>
 
-<div id="weekSummary" class="small"></div>
-
-<div class="week-calendar" id="weekCalendar"></div>
-
-<div class="week-list" id="weekList"></div>
+<div id="mildiouChart"></div>
 
 </div>
+
+
+
+<div class="card">
+
+<h2>Meilleure fenêtre</h2>
+
+<div class="best-window" id="bestWindowBox">---</div>
+
+</div>
+
 
 
 </div>
 
 
 <script>
-
-function setStatus(t){document.getElementById("statusText").innerText=t}
 
 function gps(){
 navigator.geolocation.getCurrentPosition(function(pos){
@@ -365,30 +352,26 @@ document.getElementById("humidityNow").innerText=data.current.relative_humidity_
 document.getElementById("rainNow").innerText=data.current.precipitation+" mm"
 document.getElementById("windNow").innerText=data.current.wind_speed_10m+" km/h"
 
-computeDecision(data)
-renderHours(data.hourly)
-renderWeek(data)
+decision(data)
+hours(data.hourly)
+chart(data)
 
 })
 
 }
 
-function computeDecision(data){
+
+
+function decision(data){
 
 let rainTomorrow=data.daily.precipitation_sum[1]
-let wind=data.current.wind_speed_10m
 let humidity=data.current.relative_humidity_2m
 
 let decision="Attendre"
 let txt="Situation calme"
 
-if(wind>25){
+if(rainTomorrow>8){
 decision="Éviter traitement"
-txt="Vent trop fort"
-}
-
-else if(rainTomorrow>8){
-decision="Éviter aujourd'hui"
 txt="Pluie forte demain"
 }
 
@@ -407,9 +390,12 @@ document.getElementById("eudemisValue").innerText="Faible"
 
 }
 
-function renderHours(h){
+
+
+function hours(h){
 
 let container=document.getElementById("hoursGrid")
+
 container.innerHTML=""
 
 for(let i=0;i<8;i++){
@@ -437,43 +423,55 @@ Pluie ${rain}
 
 }
 
-function renderWeek(data){
+
+
+function chart(data){
 
 let days=["Aujourd’hui","Demain","J+2","J+3","J+4","J+5","J+6"]
 
-let cal=document.getElementById("weekCalendar")
-let list=document.getElementById("weekList")
-
-cal.innerHTML=""
-list.innerHTML=""
+let html=""
+let best=0
+let bestDay="---"
 
 for(let i=0;i<7;i++){
 
 let rain=data.daily.precipitation_sum[i]
 let wind=data.daily.wind_speed_10m_max[i]
+let score=rain*10
 
-let action="Attendre"
-let icon="⏳"
-let cls="tag-orange"
+if(score>100)score=100
 
-if(wind>25){action="Éviter";icon="❌";cls="tag-red"}
-else if(rain<2){action="Traiter";icon="✅";cls="tag-green"}
+let color="fill-green"
 
-cal.innerHTML+=`
-<div class="week-day">
-${days[i]}<br>${icon}
-</div>
-`
+if(score>40)color="fill-orange"
+if(score>70)color="fill-red"
 
-list.innerHTML+=`
-<div class="week-line">
+html+=`
+
+<div class="chart-row">
+
 <div>${days[i]}</div>
-<div class="${cls}">${icon} ${action}</div>
-<div>Pluie ${rain}mm | Vent ${wind}km/h</div>
+
+<div class="chart-track">
+<div class="chart-fill ${color}" style="width:${score}%"></div>
 </div>
+
+<div>${score}</div>
+
+</div>
+
 `
+
+if(score>best){
+best=score
+bestDay=days[i]
+}
 
 }
+
+document.getElementById("mildiouChart").innerHTML=html
+
+document.getElementById("bestWindowBox").innerHTML="Jour le plus favorable : <b>"+bestDay+"</b>"
 
 }
 
