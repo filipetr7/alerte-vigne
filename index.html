@@ -665,6 +665,71 @@ const hotDryDays = countHotDryDays(data.daily.temperature_2m_max, data.daily.pre
 
 const mildiou = scoreMildiou(avgTemp, avgHum, rain24, leafWet);
 const oidium = scoreOidium(avgTemp, avgHum, rain24, hotDryDays);
+  function indiceMildiouGoidanich(temp, hum, rain24, rain7, leafWet){
+let score = 0;
+
+// chuva recente e acumulada
+if(rain24 >= 10) score += 25;
+else if(rain24 >= 5) score += 15;
+
+if(rain7 >= 20) score += 20;
+else if(rain7 >= 10) score += 10;
+
+// humidade
+if(hum >= 85) score += 20;
+else if(hum >= 75) score += 10;
+
+// temperatura favorável
+if(temp >= 11 && temp <= 24) score += 20;
+else if(temp >= 9 && temp <= 27) score += 10;
+
+// folha molhada
+if(leafWet >= 10) score += 25;
+else if(leafWet >= 6) score += 12;
+
+return clamp(Math.round(score), 0, 100);
+}
+
+function indiceOidiumViticole(temp, hum, rain24, hotDryDays){
+let score = 0;
+
+// temperatura
+if(temp >= 20 && temp <= 28) score += 30;
+else if(temp >= 16 && temp <= 31) score += 15;
+
+// humidade intermédia favorece
+if(hum >= 40 && hum <= 80) score += 25;
+else if(hum >= 30 && hum <= 90) score += 10;
+
+// pouca chuva favorece oidium
+if(rain24 < 2) score += 15;
+
+// sequência quente e seca
+if(hotDryDays >= 3) score += 30;
+else if(hotDryDays === 2) score += 15;
+
+return clamp(Math.round(score), 0, 100);
+}
+
+function labelIndice(score){
+if(score >= 70) return "Fort";
+if(score >= 40) return "Modéré";
+return "Faible";
+}
+
+function couleurCarte(globalRisk){
+if(globalRisk >= 70){
+return {emoji:"🔴", label:"Risque élevé"};
+}
+if(globalRisk >= 40){
+return {emoji:"🟠", label:"Risque modéré"};
+}
+return {emoji:"🟢", label:"Risque faible"};
+}
+
+function pluie7Jours(dailyRain){
+return dailyRain.slice(0, 7).reduce((a,b) => a + b, 0);
+}
 const blackrot = scoreBlackrot(avgTemp, avgHum, rain24);
 const eudemis = scoreEudemis(avgTemp, avgHum);
 const globalRisk = Math.max(mildiou, oidium, blackrot, eudemis);
