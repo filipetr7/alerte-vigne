@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alerte Vigne V4</title>
+  <title>Alerte Vigne V5</title>
   <style>
     :root {
       --green: #2f6f3e;
@@ -42,7 +42,7 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 980px;
       margin: 0 auto;
       padding: 16px;
     }
@@ -59,7 +59,7 @@
     .card h2 {
       margin: 0 0 18px 0;
       text-align: center;
-      font-size: 2rem;
+      font-size: 1.9rem;
       line-height: 1.1;
     }
 
@@ -69,13 +69,13 @@
       flex-wrap: wrap;
     }
 
-    .input-row input {
+    .input-row input, .input-row select {
       flex: 1;
       min-width: 220px;
-      padding: 18px 16px;
-      font-size: 1.2rem;
-      border: 3px solid #444;
-      border-radius: 18px;
+      padding: 16px 14px;
+      font-size: 1.05rem;
+      border: 2px solid #444;
+      border-radius: 16px;
       outline: none;
       background: #fff;
     }
@@ -89,28 +89,22 @@
 
     button {
       border: none;
-      border-radius: 18px;
-      padding: 16px 20px;
-      font-size: 1.15rem;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .btn-primary {
-      background: var(--green);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #667085;
-      color: white;
-    }
+    .btn-primary { background: var(--green); color: white; }
+    .btn-secondary { background: #667085; color: white; }
+    .btn-orange { background: var(--orange); color: white; }
 
     .subtext {
       text-align: center;
       color: var(--muted);
       margin-top: 10px;
-      font-size: 1.05rem;
+      font-size: 1rem;
     }
 
     .decision-box {
@@ -134,21 +128,21 @@
     }
 
     .big-status {
-      font-size: 2.3rem;
+      font-size: 2.1rem;
       font-weight: 900;
       margin-bottom: 10px;
       line-height: 1.05;
     }
 
     .big-action {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 700;
       margin-bottom: 14px;
       line-height: 1.35;
     }
 
     .best-window {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 800;
       margin-bottom: 8px;
     }
@@ -160,7 +154,7 @@
     }
 
     .place-name {
-      font-size: 3rem;
+      font-size: 2.3rem;
       font-weight: 900;
       text-align: center;
       margin: 4px 0 6px;
@@ -172,22 +166,19 @@
       text-align: center;
       color: var(--muted);
       font-size: 1rem;
+      margin-top: 4px;
     }
 
-    .grid-2, .grid-4 {
+    .grid-2, .grid-4, .grid-3 {
       display: grid;
       gap: 14px;
     }
 
-    .grid-2 {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
 
-    .grid-4 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .metric, .risk-card, .window-card, .trend-row {
+    .metric, .risk-card, .window-card, .trend-card, .alert-card {
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 18px 14px;
@@ -195,20 +186,20 @@
       background: #fff;
     }
 
-    .metric-label, .risk-name, .window-time, .trend-day {
+    .metric-label, .risk-name {
       font-size: 1rem;
       color: #222;
       margin-bottom: 6px;
     }
 
     .metric-value {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 900;
       line-height: 1.05;
     }
 
     .risk-score {
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 900;
       margin-top: 6px;
     }
@@ -238,60 +229,58 @@
     }
 
     .window-time {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 900;
       margin-bottom: 8px;
     }
 
     .window-info {
-      font-size: 1.1rem;
+      font-size: 1rem;
       line-height: 1.4;
     }
 
-    .trend-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .trend-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: left;
-      padding: 14px 16px;
+    .trend-card {
+      padding: 14px 10px;
     }
 
     .trend-day {
-      margin: 0;
-      font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .trend-icon {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .trend-temp {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
 
     .explain-list {
       display: grid;
       gap: 10px;
       color: #374151;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       line-height: 1.45;
     }
 
-    .loading, .error {
+    .loading, .error, .success {
       text-align: center;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       padding: 14px;
       border-radius: 16px;
+      margin-bottom: 14px;
     }
 
-    .loading {
-      background: #eef2ff;
-      color: #374151;
-    }
-
-    .error {
-      background: #fdecec;
-      color: #991b1b;
-    }
+    .loading { background: #eef2ff; color: #374151; }
+    .error { background: #fdecec; color: #991b1b; }
+    .success { background: #eaf6ee; color: #14532d; }
 
     .footer-note {
       color: var(--muted);
@@ -300,27 +289,33 @@
       text-align: center;
     }
 
-    @media (max-width: 640px) {
-      .header {
-        font-size: 1.8rem;
-      }
-      .card h2 {
-        font-size: 1.75rem;
-      }
-      .place-name {
-        font-size: 2.4rem;
-      }
-      .metric-value {
-        font-size: 1.9rem;
-      }
-      .big-status {
-        font-size: 2rem;
-      }
+    .switch-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .small-text {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 760px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .place-name { font-size: 2rem; }
+      .big-status { font-size: 1.8rem; }
     }
   </style>
 </head>
 <body>
-  <div class="header">🍇 Alerte Vigne</div>
+  <div class="header">🍇 Alerte Vigne V5</div>
 
   <div class="container">
     <div class="card">
@@ -331,8 +326,43 @@
       <div class="btn-row">
         <button class="btn-primary" id="searchBtn">Voir le risque</button>
         <button class="btn-secondary" id="gpsBtn">GPS</button>
+        <button class="btn-orange" id="refreshBtn">Actualiser</button>
       </div>
-      <div class="subtext">Choisissez une ville ou utilisez votre position actuelle</div>
+      <div class="subtext">Météo quasi temps réel + analyse du risque vigne</div>
+    </div>
+
+    <div class="card">
+      <h2>Alertes locales</h2>
+      <div class="grid-3">
+        <div class="alert-card">
+          <div class="metric-label">Notifications</div>
+          <div class="btn-row" style="justify-content:center;">
+            <button class="btn-primary" id="enableNotifBtn">Activer</button>
+            <button class="btn-secondary" id="testNotifBtn">Tester</button>
+          </div>
+          <div class="small-text" id="notifStatus">Statut: inconnu</div>
+        </div>
+
+        <div class="alert-card">
+          <div class="metric-label">Seuil d’alerte</div>
+          <div class="input-row">
+            <select id="alertThreshold">
+              <option value="30">Moyen et plus</option>
+              <option value="60" selected>Élevé seulement</option>
+            </select>
+          </div>
+          <div class="small-text">Déclenche une alerte quand le risque global atteint ce niveau</div>
+        </div>
+
+        <div class="alert-card">
+          <div class="metric-label">Mode alerte</div>
+          <div class="switch-row">
+            <label><input type="checkbox" id="alertsEnabled" checked /> Alertes actives</label>
+            <label><input type="checkbox" id="soundEnabled" checked /> Son</label>
+          </div>
+          <div class="small-text">Les alertes fonctionnent tant que la page reste ouverte</div>
+        </div>
+      </div>
     </div>
 
     <div id="statusArea"></div>
@@ -356,6 +386,14 @@
         <h2>Météo actuelle</h2>
         <div class="grid-4">
           <div class="metric">
+            <div class="metric-label">Temps</div>
+            <div class="metric-value" id="weatherIconNow" style="font-size:2.4rem;">☀️</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Condition</div>
+            <div class="metric-value" id="weatherTextNow" style="font-size:1.2rem;">---</div>
+          </div>
+          <div class="metric">
             <div class="metric-label">Température</div>
             <div class="metric-value" id="tempNow">--°C</div>
           </div>
@@ -377,7 +415,7 @@
           </div>
           <div class="metric">
             <div class="metric-label">Situation</div>
-            <div class="metric-value" id="situationNow" style="font-size:1.5rem;">---</div>
+            <div class="metric-value" id="situationNow" style="font-size:1.2rem;">---</div>
           </div>
         </div>
       </div>
@@ -415,7 +453,7 @@
 
       <div class="card">
         <h2>Tendance 3 jours</h2>
-        <div class="trend-list" id="trendList"></div>
+        <div class="grid-3" id="trendGrid"></div>
       </div>
 
       <div class="card">
@@ -425,8 +463,9 @@
 
       <div class="card">
         <div class="footer-note">
-          Modèle MVP basé sur météo + règles simples.  
-          La feuille mouillée est estimée. Pour un usage professionnel, ajoutez capteurs, historique de traitements et modèle agronomique avancé.
+          Cette version utilise des données météo actualisées automatiquement.  
+          Les alertes locales fonctionnent dans le navigateur tant que la page reste ouverte.  
+          Pour de vraies alertes en arrière-plan, il faudra faire une PWA avec service worker ou une app mobile.
         </div>
       </div>
     </div>
@@ -436,6 +475,14 @@
     const cityInput = document.getElementById("cityInput");
     const searchBtn = document.getElementById("searchBtn");
     const gpsBtn = document.getElementById("gpsBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const enableNotifBtn = document.getElementById("enableNotifBtn");
+    const testNotifBtn = document.getElementById("testNotifBtn");
+    const alertsEnabledInput = document.getElementById("alertsEnabled");
+    const soundEnabledInput = document.getElementById("soundEnabled");
+    const alertThresholdSelect = document.getElementById("alertThreshold");
+    const notifStatus = document.getElementById("notifStatus");
+
     const app = document.getElementById("app");
     const statusArea = document.getElementById("statusArea");
 
@@ -443,6 +490,8 @@
     const coordsText = document.getElementById("coordsText");
     const updatedText = document.getElementById("updatedText");
 
+    const weatherIconNow = document.getElementById("weatherIconNow");
+    const weatherTextNow = document.getElementById("weatherTextNow");
     const tempNow = document.getElementById("tempNow");
     const humNow = document.getElementById("humNow");
     const rainNow = document.getElementById("rainNow");
@@ -467,39 +516,52 @@
     const globalMotif = document.getElementById("globalMotif");
 
     const windowsGrid = document.getElementById("windowsGrid");
-    const trendList = document.getElementById("trendList");
+    const trendGrid = document.getElementById("trendGrid");
     const explainList = document.getElementById("explainList");
 
-    const WEATHER_CODE_LABELS = {
-      0: "Clair",
-      1: "Peu nuageux",
-      2: "Partiellement nuageux",
-      3: "Couvert",
-      45: "Brouillard",
-      48: "Brouillard givrant",
-      51: "Bruine légère",
-      53: "Bruine modérée",
-      55: "Bruine forte",
-      56: "Bruine verglaçante",
-      57: "Bruine verglaçante forte",
-      61: "Pluie légère",
-      63: "Pluie modérée",
-      65: "Pluie forte",
-      66: "Pluie verglaçante légère",
-      67: "Pluie verglaçante forte",
-      71: "Neige légère",
-      73: "Neige modérée",
-      75: "Neige forte",
-      77: "Grains de neige",
-      80: "Averses légères",
-      81: "Averses modérées",
-      82: "Averses violentes",
-      85: "Averses de neige",
-      86: "Averses de neige fortes",
-      95: "Orage",
-      96: "Orage grêle légère",
-      99: "Orage grêle forte"
+    let appState = {
+      lat: null,
+      lon: null,
+      placeLabel: null,
+      cityName: null,
+      lastAnalysis: null
     };
+
+    const STORAGE_KEYS = {
+      city: "alerte_vigne_city",
+      lat: "alerte_vigne_lat",
+      lon: "alerte_vigne_lon",
+      placeLabel: "alerte_vigne_place_label",
+      alertsEnabled: "alerte_vigne_alerts_enabled",
+      soundEnabled: "alerte_vigne_sound_enabled",
+      threshold: "alerte_vigne_threshold",
+      lastAlertKey: "alerte_vigne_last_alert_key"
+    };
+
+    const WEATHER_CODE_LABELS = {
+      0: "Clair", 1: "Peu nuageux", 2: "Partiellement nuageux", 3: "Couvert",
+      45: "Brouillard", 48: "Brouillard givrant",
+      51: "Bruine légère", 53: "Bruine modérée", 55: "Bruine forte",
+      61: "Pluie légère", 63: "Pluie modérée", 65: "Pluie forte",
+      66: "Pluie verglaçante", 67: "Pluie verglaçante forte",
+      71: "Neige légère", 73: "Neige modérée", 75: "Neige forte",
+      77: "Grains de neige",
+      80: "Averses légères", 81: "Averses modérées", 82: "Averses fortes",
+      85: "Averses de neige", 86: "Averses de neige fortes",
+      95: "Orage", 96: "Orage grêle légère", 99: "Orage grêle forte"
+    };
+
+    function weatherCodeToIcon(code) {
+      if ([0].includes(code)) return "☀️";
+      if ([1,2].includes(code)) return "🌤️";
+      if ([3].includes(code)) return "☁️";
+      if ([45,48].includes(code)) return "🌫️";
+      if ([51,53,55,56,57].includes(code)) return "🌦️";
+      if ([61,63,65,66,67,80,81,82].includes(code)) return "🌧️";
+      if ([71,73,75,77,85,86].includes(code)) return "❄️";
+      if ([95,96,99].includes(code)) return "⛈️";
+      return "🌤️";
+    }
 
     function setStatus(type, text) {
       statusArea.innerHTML = `<div class="${type}">${text}</div>`;
@@ -523,7 +585,13 @@
 
     function nowTimeString() {
       const d = new Date();
-      return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+      return d.toLocaleString("fr-FR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
 
     function levelFromScore(score) {
@@ -548,6 +616,86 @@
       if (score >= 80) return "Idéal";
       if (score >= 55) return "Acceptable";
       return "À éviter";
+    }
+
+    function setPill(el, level) {
+      el.textContent = level;
+      el.className = "pill " + levelClass(level);
+    }
+
+    function savePrefs() {
+      localStorage.setItem(STORAGE_KEYS.alertsEnabled, alertsEnabledInput.checked ? "1" : "0");
+      localStorage.setItem(STORAGE_KEYS.soundEnabled, soundEnabledInput.checked ? "1" : "0");
+      localStorage.setItem(STORAGE_KEYS.threshold, alertThresholdSelect.value);
+    }
+
+    function loadPrefs() {
+      const alertsEnabled = localStorage.getItem(STORAGE_KEYS.alertsEnabled);
+      const soundEnabled = localStorage.getItem(STORAGE_KEYS.soundEnabled);
+      const threshold = localStorage.getItem(STORAGE_KEYS.threshold);
+      const savedCity = localStorage.getItem(STORAGE_KEYS.city);
+
+      alertsEnabledInput.checked = alertsEnabled !== "0";
+      soundEnabledInput.checked = soundEnabled !== "0";
+      alertThresholdSelect.value = threshold || "60";
+
+      if (savedCity) cityInput.value = savedCity;
+    }
+
+    function updateNotificationStatus() {
+      if (!("Notification" in window)) {
+        notifStatus.textContent = "Statut: navigateur non compatible";
+        return;
+      }
+      notifStatus.textContent = `Statut: ${Notification.permission}`;
+    }
+
+    async function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Ce navigateur ne supporte pas les notifications.");
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      updateNotificationStatus();
+      if (permission === "granted") {
+        setStatus("success", "Notifications activées.");
+      } else {
+        setStatus("error", "Notifications refusées.");
+      }
+    }
+
+    function playAlertSound() {
+      if (!soundEnabledInput.checked) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(880, ctx.currentTime);
+        gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + 0.25);
+      } catch (e) {
+      }
+    }
+
+    function sendLocalNotification(title, body) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+
+      try {
+        new Notification(title, {
+          body,
+          icon: "",
+          tag: "alerte-vigne-risk"
+        });
+      } catch (e) {
+      }
     }
 
     function estimateLeafWetHours(hourlyHumidity, hourlyRain, hourlyTemp, startIdx, hours = 24) {
@@ -716,11 +864,6 @@
       return lines.length ? lines : ["Conditions globalement calmes pour le moment."];
     }
 
-    function setPill(el, level) {
-      el.textContent = level;
-      el.className = "pill " + levelClass(level);
-    }
-
     function renderDecision(globalLevel, action, bestWindow, reasons) {
       decisionBox.className = "card decision-box " + decisionClass(globalLevel);
       globalStatus.textContent = `RISQUE GLOBAL: ${globalLevel.toUpperCase()}`;
@@ -755,18 +898,22 @@
     }
 
     function renderTrend(days) {
-      trendList.innerHTML = "";
+      trendGrid.innerHTML = "";
       days.forEach(day => {
         const level = levelFromScore(day.score);
-        const row = document.createElement("div");
-        row.className = "trend-row";
-        row.innerHTML = `
+        const div = document.createElement("div");
+        div.className = "trend-card";
+        div.innerHTML = `
           <div class="trend-day">${day.label}</div>
-          <div>
-            <span class="pill ${levelClass(level)}">${level}</span>
+          <div class="trend-icon">${day.icon}</div>
+          <div class="trend-temp">${round1(day.tmin)}° / ${round1(day.tmax)}°</div>
+          <div class="pill ${levelClass(level)}">${level}</div>
+          <div class="small-text" style="margin-top:8px;">
+            ${day.weatherText}<br>
+            Pluie: ${round1(day.rain)} mm
           </div>
         `;
-        trendList.appendChild(row);
+        trendGrid.appendChild(div);
       });
     }
 
@@ -798,8 +945,8 @@
     }
 
     async function fetchWeather(lat, lon) {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=7&timezone=auto`;
-      const res = await fetch(url);
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=7&timezone=auto`;
+      const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) throw new Error("Erreur lors du chargement météo.");
       return await res.json();
     }
@@ -886,13 +1033,34 @@
       return list.slice(0, 3);
     }
 
-    async function runApp(lat, lon, displayName) {
+    function maybeSendRiskAlert(analysis) {
+      if (!alertsEnabledInput.checked) return;
+      const threshold = Number(alertThresholdSelect.value || 60);
+      const risk = analysis.globalRisk;
+      if (risk < threshold) return;
+
+      const key = [
+        appState.placeLabel || "unknown",
+        analysis.globalLevel,
+        analysis.bestWindow ? analysis.bestWindow.timeLabel : "no-window",
+        new Date().toISOString().slice(0, 13)
+      ].join("|");
+
+      const lastKey = localStorage.getItem(STORAGE_KEYS.lastAlertKey);
+      if (lastKey === key) return;
+
+      const body = `${appState.placeLabel || "Zone"} · ${analysis.globalLevel}. ${analysis.action}`;
+      sendLocalNotification("Alerte Vigne", body);
+      playAlertSound();
+      localStorage.setItem(STORAGE_KEYS.lastAlertKey, key);
+    }
+
+    async function runApp(lat, lon, displayName, silent = false) {
       try {
-        setStatus("loading", "Analyse des conditions en cours...");
+        if (!silent) setStatus("loading", "Analyse des conditions en cours...");
         app.style.display = "none";
 
         const weather = await fetchWeather(lat, lon);
-
         const current = weather.current;
         const hourly = weather.hourly;
         const daily = weather.daily;
@@ -935,13 +1103,21 @@
           const riskDay = computeDailyRiskFromIndex(hourly, daily, idx);
           trends.push({
             label: d === 0 ? "Aujourd’hui" : d === 1 ? "Demain" : "J+2",
-            score: riskDay.global
+            score: riskDay.global,
+            icon: weatherCodeToIcon(daily.weather_code[d]),
+            weatherText: WEATHER_CODE_LABELS[daily.weather_code[d]] || "Météo",
+            tmin: daily.temperature_2m_min[d],
+            tmax: daily.temperature_2m_max[d],
+            rain: daily.precipitation_sum[d]
           });
         }
 
         placeName.textContent = displayName;
         coordsText.textContent = formatCoords(lat, lon);
         updatedText.textContent = `Dernière mise à jour: ${nowTimeString()}`;
+
+        weatherIconNow.textContent = weatherCodeToIcon(current.weather_code);
+        weatherTextNow.textContent = WEATHER_CODE_LABELS[current.weather_code] || "Météo";
 
         tempNow.textContent = `${round1(current.temperature_2m)}°C`;
         humNow.textContent = `${Math.round(current.relative_humidity_2m)}%`;
@@ -969,6 +1145,19 @@
         renderTrend(trends);
         renderExplain(explanations);
 
+        appState.lastAnalysis = {
+          globalRisk: todayRisk.global,
+          globalLevel,
+          action,
+          bestWindow
+        };
+
+        maybeSendRiskAlert(appState.lastAnalysis);
+
+        localStorage.setItem(STORAGE_KEYS.lat, String(lat));
+        localStorage.setItem(STORAGE_KEYS.lon, String(lon));
+        localStorage.setItem(STORAGE_KEYS.placeLabel, displayName);
+
         clearStatus();
         app.style.display = "block";
       } catch (err) {
@@ -977,7 +1166,7 @@
       }
     }
 
-    searchBtn.addEventListener("click", async () => {
+    async function searchByCity() {
       const city = cityInput.value.trim();
       if (!city) {
         setStatus("error", "Entrez une ville avant de lancer l’analyse.");
@@ -988,13 +1177,21 @@
         setStatus("loading", "Recherche de la localisation...");
         const loc = await geocodeCity(city);
         const niceName = [loc.name, loc.region, loc.country].filter(Boolean).join(", ");
+
+        appState.lat = loc.latitude;
+        appState.lon = loc.longitude;
+        appState.placeLabel = niceName;
+        appState.cityName = city;
+
+        localStorage.setItem(STORAGE_KEYS.city, city);
+
         await runApp(loc.latitude, loc.longitude, niceName);
       } catch (err) {
         setStatus("error", err.message || "Impossible de trouver cette ville.");
       }
-    });
+    }
 
-    gpsBtn.addEventListener("click", () => {
+    function searchByGPS() {
       if (!navigator.geolocation) {
         setStatus("error", "La géolocalisation n’est pas supportée sur cet appareil.");
         return;
@@ -1006,6 +1203,14 @@
         async (pos) => {
           const lat = pos.coords.latitude;
           const lon = pos.coords.longitude;
+
+          appState.lat = lat;
+          appState.lon = lon;
+          appState.placeLabel = "Ma position actuelle";
+          appState.cityName = null;
+
+          localStorage.removeItem(STORAGE_KEYS.city);
+
           await runApp(lat, lon, "Ma position actuelle");
         },
         (err) => {
@@ -1017,13 +1222,93 @@
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
       );
-    });
+    }
+
+    async function refreshCurrentLocation(silent = false) {
+      if (appState.lat != null && appState.lon != null && appState.placeLabel) {
+        await runApp(appState.lat, appState.lon, appState.placeLabel, silent);
+        return;
+      }
+
+      const savedLat = localStorage.getItem(STORAGE_KEYS.lat);
+      const savedLon = localStorage.getItem(STORAGE_KEYS.lon);
+      const savedPlace = localStorage.getItem(STORAGE_KEYS.placeLabel);
+
+      if (savedLat && savedLon && savedPlace) {
+        appState.lat = Number(savedLat);
+        appState.lon = Number(savedLon);
+        appState.placeLabel = savedPlace;
+        await runApp(appState.lat, appState.lon, appState.placeLabel, silent);
+      }
+    }
+
+    function testNotification() {
+      if (!("Notification" in window)) {
+        setStatus("error", "Notifications non supportées.");
+        return;
+      }
+      if (Notification.permission !== "granted") {
+        setStatus("error", "Active d’abord les notifications.");
+        return;
+      }
+      sendLocalNotification("Test Alerte Vigne", "Les notifications locales fonctionnent correctement.");
+      playAlertSound();
+      setStatus("success", "Notification de test envoyée.");
+    }
+
+    function initAutoRefresh() {
+      setInterval(() => {
+        refreshCurrentLocation(true);
+      }, 10 * 60 * 1000);
+    }
+
+    function initAlertLoop() {
+      setInterval(() => {
+        refreshCurrentLocation(true);
+      }, 5 * 60 * 1000);
+    }
+
+    searchBtn.addEventListener("click", searchByCity);
+    gpsBtn.addEventListener("click", searchByGPS);
+    refreshBtn.addEventListener("click", () => refreshCurrentLocation(false));
+    enableNotifBtn.addEventListener("click", requestNotificationPermission);
+    testNotifBtn.addEventListener("click", testNotification);
+
+    alertsEnabledInput.addEventListener("change", savePrefs);
+    soundEnabledInput.addEventListener("change", savePrefs);
+    alertThresholdSelect.addEventListener("change", savePrefs);
 
     cityInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") searchBtn.click();
+      if (e.key === "Enter") searchByCity();
     });
 
-    cityInput.value = "Douzens";
+    loadPrefs();
+    updateNotificationStatus();
+    initAutoRefresh();
+    initAlertLoop();
+
+    window.addEventListener("load", async () => {
+      const savedCity = localStorage.getItem(STORAGE_KEYS.city);
+      const savedLat = localStorage.getItem(STORAGE_KEYS.lat);
+      const savedLon = localStorage.getItem(STORAGE_KEYS.lon);
+      const savedPlace = localStorage.getItem(STORAGE_KEYS.placeLabel);
+
+      if (savedCity) {
+        cityInput.value = savedCity;
+        await searchByCity();
+        return;
+      }
+
+      if (savedLat && savedLon && savedPlace) {
+        appState.lat = Number(savedLat);
+        appState.lon = Number(savedLon);
+        appState.placeLabel = savedPlace;
+        await runApp(appState.lat, appState.lon, appState.placeLabel);
+        return;
+      }
+
+      cityInput.value = "Douzens";
+    });
   </script>
 </body>
 </html>
