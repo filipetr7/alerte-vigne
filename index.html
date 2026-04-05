@@ -1472,20 +1472,23 @@ window.addEventListener("load", async () => {
 
   cityInput.value = "Douzens";
 });
-</script>
 <script>
-document.getElementById("searchBtn").onclick = async function () {
-  try {
-    const city = document.getElementById("cityInput").value.trim() || "Douzens";
+
+async function voirMeteo(){
+
+  const city = document.getElementById("cityInput").value.trim() || "Douzens";
+
+  try{
 
     const geo = await fetch(
       "https://geocoding-api.open-meteo.com/v1/search?name=" +
       encodeURIComponent(city) +
       "&count=1&language=fr&format=json"
     );
+
     const geoData = await geo.json();
 
-    if (!geoData.results || !geoData.results.length) {
+    if(!geoData.results || !geoData.results.length){
       alert("Ville introuvable");
       return;
     }
@@ -1497,20 +1500,103 @@ document.getElementById("searchBtn").onclick = async function () {
       loc.latitude +
       "&longitude=" +
       loc.longitude +
-      "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&timezone=auto"
+      "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code"+
+      "&timezone=auto"
     );
 
-    const meteoData = await meteo.json();
+    const data = await meteo.json();
 
-    alert(
-      "OK\\n" +
-      loc.name + "\\n" +
-      "Temp: " + meteoData.current.temperature_2m + "°C\\n" +
-      "Humidité: " + meteoData.current.relative_humidity_2m + "%"
-    );
-  } catch (e) {
-    alert("Erreur JS: " + e.message);
+    document.getElementById("tempNow").textContent =
+      data.current.temperature_2m + "°C";
+
+    document.getElementById("humNow").textContent =
+      data.current.relative_humidity_2m + "%";
+
+    document.getElementById("rainNow").textContent =
+      data.current.precipitation + " mm";
+
+    document.getElementById("windNow").textContent =
+      data.current.wind_speed_10m + " km/h";
+
+    document.getElementById("placeName").textContent =
+      loc.name;
+
+    document.getElementById("app").classList.remove("hidden");
+
+  }catch(e){
+
+    alert("Erreur météo : " + e.message);
+
   }
-};
+
+}
+
+
+async function gps(){
+
+  if(!navigator.geolocation){
+    alert("GPS non supporté");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async pos => {
+
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+
+    try{
+
+      const meteo = await fetch(
+        "https://api.open-meteo.com/v1/forecast?latitude=" +
+        lat +
+        "&longitude=" +
+        lon +
+        "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m"+
+        "&timezone=auto"
+      );
+
+      const data = await meteo.json();
+
+      document.getElementById("tempNow").textContent =
+        data.current.temperature_2m + "°C";
+
+      document.getElementById("humNow").textContent =
+        data.current.relative_humidity_2m + "%";
+
+      document.getElementById("rainNow").textContent =
+        data.current.precipitation + " mm";
+
+      document.getElementById("windNow").textContent =
+        data.current.wind_speed_10m + " km/h";
+
+      document.getElementById("placeName").textContent =
+        "Ma position";
+
+      document.getElementById("app").classList.remove("hidden");
+
+    }catch(e){
+
+      alert("Erreur météo");
+
+    }
+
+  });
+
+}
+
+
+function refresh(){
+
+  voirMeteo();
+
+}
+
+
+document.getElementById("searchBtn").onclick = voirMeteo;
+document.getElementById("gpsBtn").onclick = gps;
+document.getElementById("refreshBtn").onclick = refresh;
+
+
+</script>
 </script> </body>
 </html>
